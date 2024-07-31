@@ -16,7 +16,7 @@ const handleKakaoLogin = async (accessToken) => {
   authStore.accessToken = accessToken
 
   try {
-    router.push('/')
+    router.push('/planding')
   } catch (error) {
     console.error(error)
   }
