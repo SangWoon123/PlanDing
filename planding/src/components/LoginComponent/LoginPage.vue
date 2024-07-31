@@ -17,7 +17,7 @@
           <LoginBtn style="margin: 50px 0 15px 0" color="#9DA2FF" text="Login" textColor="white" />
           <LoginBtn style="margin-bottom: 30px" color="#BEBEBE" text="Sign In" textColor="gray" />
           <span class="line"></span>
-          <LoginBtn color="#fee500" text="kakao" />
+          <LoginBtn @click="handleKakaoLogin" color="#fee500" text="kakao" />
         </div>
       </div>
     </div>
@@ -28,8 +28,14 @@
 import LoginBtn from './LoginBtn.vue'
 import LoginInput from './LoginInput.vue'
 
+const VITE_APP_SERVER_URI = import.meta.env.VITE_APP_SERVER_URI
+
 const desc =
   'PlanDing은 일정 관리와 그룹 스터디 플래너의 경계를 넘어서는 플랫폼입니다. 사용자의 일상과 학습 활동을 지원하기 위해 설계된 PlanDing은 직관적인 인터페이스와 함께, 일정 계획부터 실행까지 일련의 과정을 단순화하고 향상시키는 다양한 기능을 제공합니다.'
+
+const handleKakaoLogin = async () => {
+  window.location.href = VITE_APP_SERVER_URI + '/oauth2/authorization/kakao'
+}
 </script>
 
 <style lang="scss" scoped>
