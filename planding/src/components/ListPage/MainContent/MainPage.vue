@@ -20,7 +20,7 @@
     <div class="right">
       <Top />
       <DatePicker />
-      
+      <Bottom />
     </div>
   </section>
 </template>
@@ -28,13 +28,12 @@
 <script setup>
 import SubTitle from './atom/SubTitle.vue'
 import GroupRoom from './GroupRoom.vue'
-import Top from './right/Top.vue'
+import Top from './right/HeaderSection.vue'
 import DatePicker from './right/DateSelect.vue'
+import Bottom from './right/Footer.vue'
 
 const title = '박철현님의 일정'
 const createdAt = '1시간전'
-const myplan = 'My Plan'
-const teamplan = 'Team Plan'
 </script>
 
 <style lang="scss" scoped>

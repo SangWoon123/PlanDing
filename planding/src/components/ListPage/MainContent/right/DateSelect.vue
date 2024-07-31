@@ -1,5 +1,12 @@
 <template>
-  <v-date-picker :month-format="getMonth" locale="ko">
+  <v-date-picker
+    show-adjacent-months
+    hide-header
+    bg-color="#F6F6F8"
+    :month-format="getMonth"
+    class="date-picker"
+    locale="ko-KR"
+  >
   </v-date-picker>
 </template>
 
@@ -22,3 +29,10 @@ const getMonth = (date) => {
   return months[date.getMonth()]
 }
 </script>
+
+<style lang="scss" scoped>
+.date-picker {
+  transform: scale(0.9);
+  border-radius: 8px;
+}
+</style>
