@@ -7,7 +7,7 @@
         <SubTitle text="My Plan" />
         <PlanComponent :desc="myplan" height="222px" />
         <SubTitle text="Team Plan" />
-        <PlanComponent :desc="teamplan" height="100%" />
+        <PlanComponent :desc="teamplan" height="100%" style="border-radius: 0 0 4px 4px" />
       </div>
     </div>
     <div class="right"></div>
