@@ -1,10 +1,13 @@
 <template>
-  <h1>Hello World</h1>
+  <div style="display: flex; justify-content: center">
+    <Progress />
+  </div>
 </template>
 
 <script setup>
-import router from '@/router';
+import router from '@/router'
 import { useAuthStore } from '@/store/store'
+import Progress from '../Progress.vue'
 const queryParams = new URLSearchParams(location.search)
 const accessToken = queryParams.get('accessToken')
 
