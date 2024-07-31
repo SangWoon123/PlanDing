@@ -12,20 +12,24 @@
 
         <SubTitle text="Team Plan" />
         <div class="plan-content" style="height: 100%; border-radius: 0 0 4px 4px">
-          <GroupRoom title="그룹 생성" style="color: #363bc9" />
-          <div v-for="i in 4" >
-            <GroupRoom :img="img" :title="title" :createdAt="createdAt" />
-          </div>
+          <GroupRoom title="그룹 생성" style="color: #363bc9; cursor: pointer" />
+          <GroupRoom :img="img" :title="title" :createdAt="createdAt" />
         </div>
       </div>
     </div>
-    <div class="right"></div>
+    <div class="right">
+      <Top />
+      <DatePicker />
+      
+    </div>
   </section>
 </template>
 
 <script setup>
 import SubTitle from './atom/SubTitle.vue'
 import GroupRoom from './GroupRoom.vue'
+import Top from './right/Top.vue'
+import DatePicker from './right/DateSelect.vue'
 
 const title = '박철현님의 일정'
 const createdAt = '1시간전'
@@ -97,6 +101,9 @@ const teamplan = 'Team Plan'
     width: 320px;
     height: 860px;
     border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 }
 </style>
