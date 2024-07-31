@@ -4,10 +4,19 @@
     <div class="mid">
       <div class="inner">
         <div class="title">PlanDing</div>
+
         <SubTitle text="My Plan" />
-        <PlanComponent :desc="myplan" height="222px" />
+        <div class="plan-content" :style="{ height: height }">
+          <GroupRoom :img="img" :title="title" :createdAt="createdAt" />
+        </div>
+
         <SubTitle text="Team Plan" />
-        <PlanComponent :desc="teamplan" height="100%" style="border-radius: 0 0 4px 4px" />
+        <div class="plan-content" style="height: 100%; border-radius: 0 0 4px 4px">
+          <GroupRoom title="그룹 생성" style="color: #363bc9" />
+          <div v-for="i in 4" >
+            <GroupRoom :img="img" :title="title" :createdAt="createdAt" />
+          </div>
+        </div>
       </div>
     </div>
     <div class="right"></div>
@@ -15,9 +24,11 @@
 </template>
 
 <script setup>
-import PlanComponent from './PlanComponent.vue'
 import SubTitle from './atom/SubTitle.vue'
+import GroupRoom from './GroupRoom.vue'
 
+const title = '박철현님의 일정'
+const createdAt = '1시간전'
 const myplan = 'My Plan'
 const teamplan = 'Team Plan'
 </script>
@@ -72,6 +83,12 @@ const teamplan = 'Team Plan'
         color: #ffffff;
         padding: 12px;
         border-radius: 4px 4px 0 0;
+      }
+      .plan-content {
+        background-color: #ffffff;
+        padding: 12px;
+        display: flex;
+        flex-wrap: wrap;
       }
     }
   }

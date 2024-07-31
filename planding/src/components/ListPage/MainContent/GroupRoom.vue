@@ -25,6 +25,7 @@ const props = defineProps({
   width: 223px;
   height: 178px;
   padding: 12px;
+  margin: 0 12px 0 0;
 
   figure {
     display: flex;
