@@ -11,9 +11,9 @@ import Progress from '../Progress.vue'
 const queryParams = new URLSearchParams(location.search)
 const accessToken = queryParams.get('accessToken')
 
-const handleKakaoLogin = async (accessToken) => {
+const handleKakaoLogin = async (token) => {
   const authStore = useAuthStore()
-  authStore.accessToken = accessToken
+  authStore.saveToken(token)
 
   try {
     router.push('/planding')
