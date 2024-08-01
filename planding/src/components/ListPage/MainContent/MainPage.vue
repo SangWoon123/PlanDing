@@ -12,7 +12,7 @@
 
         <SubTitle text="Team Plan" />
         <div class="plan-content" style="height: 100%; border-radius: 0 0 4px 4px">
-          <GroupRoom title="그룹 생성" style="color: #363bc9; cursor: pointer" />
+          <GroupRoom class="group-room" @click="createGroup" title="그룹 생성" />
           <GroupRoom :img="img" :title="title" :createdAt="createdAt" />
         </div>
       </div>
@@ -22,18 +22,33 @@
       <DatePicker />
       <Bottom />
     </div>
+    <!-- Group 모달 -->
+    <GroupMake
+      v-if="groupModal"
+      @closeModal="groupModal.value = false"
+      @close="groupModal = false"
+    />
   </section>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import SubTitle from './atom/SubTitle.vue'
 import GroupRoom from './GroupRoom.vue'
 import Top from './right/HeaderSection.vue'
 import DatePicker from './right/DateSelect.vue'
 import Bottom from './right/Footer.vue'
+import GroupMake from '@/components/Group/GroupCreate.vue'
 
 const title = '박철현님의 일정'
 const createdAt = '1시간전'
+
+const groupModal = ref(false)
+
+const createGroup = () => {
+  groupModal.value = !groupModal.value
+  console.log(groupModal.value)
+}
 </script>
 
 <style lang="scss" scoped>
@@ -92,6 +107,13 @@ const createdAt = '1시간전'
         padding: 12px;
         display: flex;
         flex-wrap: wrap;
+        .group-room {
+          color: #363bc9;
+          cursor: pointer;
+          transition:
+            transform 0.3s ease,
+            box-shadow 0.3s ease;
+        }
       }
     }
   }
