@@ -4,12 +4,12 @@
       <figure>
         <img src="../../../../assets/Ellipse.png" alt="" />
         <div class="info">
-          <span>닉네임</span>
-          <span style="font-size: 16px; color: lightgrey">#----</span>
+          <span>{{ userInfo.userName }}</span>
+          <span style="font-size: 16px; color: lightgrey">{{ userInfo.userCode }}</span>
         </div>
       </figure>
 
-      <button class="logout" type="button">로그아웃</button>
+      <button @click="logout" class="logout" type="button">로그아웃</button>
     </div>
 
     <div class="two">
@@ -23,7 +23,20 @@
   </section>
 </template>
 
-<script setup></script>
+<script setup>
+import { useAuthStore } from '@/store/store'
+import { onMounted } from 'vue'
+
+const userInfo = useAuthStore()
+
+onMounted(async () => {
+  await userInfo.getUserInfo()
+})
+
+const logout = () => {
+  userInfo.clearAuth()
+}
+</script>
 
 <style lang="scss" scoped>
 #top {
@@ -61,7 +74,7 @@
   }
   .two {
     margin-left: 20px;
-    button:first-child{
+    button:first-child {
       margin-right: 5px;
     }
   }
