@@ -1,7 +1,7 @@
 <template>
   <div class="group-box">
     <figure>
-      <img :src="img" alt="" />
+      <img :src="img" :class="{ 'img-false': !img }" alt="" />
     </figure>
     <div class="group-title">
       <span>{{ title }}</span>
@@ -40,6 +40,15 @@ const props = defineProps({
     width: 199px;
     height: 120px;
     border-radius: 4px;
+    overflow: hidden;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .img-false {
+      width: 0;
+    }
   }
   .group-title {
     margin-top: 10px;

@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import router from '@/router'
+import { authInstance } from '@/api/authAxios'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -24,15 +25,10 @@ export const useAuthStore = defineStore('auth', {
       router.push('/')
     },
     async getUserInfo() {
-      const VITE_APP_SERVER_URI = import.meta.env.VITE_APP_SERVER_URI
-      const response = await axios.get(VITE_APP_SERVER_URI + '/api/v1/profile', {
-        headers: {
-          Authorization: `Bearer ${this.accessToken}`
-        }
-      })
-
+      const response = await authInstance('/api/v1/profile').get()
       this.userCode = response.data.data.userCode
       this.userName = response.data.data.username
+      this.profileImage = response.data.data.profileImage
     }
   }
 })

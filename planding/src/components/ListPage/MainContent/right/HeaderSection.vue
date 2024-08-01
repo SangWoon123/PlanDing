@@ -2,7 +2,11 @@
   <section id="top">
     <div class="one">
       <figure>
-        <img src="../../../../assets/Ellipse.png" alt="" />
+        <img
+          :src="userInfo.profileImage || baseImage"
+          :class="{ 'profile-true': userInfo.profileImage }"
+          alt=""
+        />
         <div class="info">
           <span>{{ userInfo.userName }}</span>
           <span style="font-size: 16px; color: lightgrey">{{ userInfo.userCode }}</span>
@@ -24,6 +28,7 @@
 </template>
 
 <script setup>
+import baseImage from '../../../../assets/Ellipse.png'
 import { useAuthStore } from '@/store/store'
 import { onMounted } from 'vue'
 
@@ -57,6 +62,11 @@ const logout = () => {
       align-items: center;
       img {
         height: 100%;
+      }
+      .profile-true {
+        width: 40px;
+        height: 40px;
+        border-radius: 9999px;
       }
     }
     .info {

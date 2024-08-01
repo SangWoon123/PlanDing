@@ -11,9 +11,16 @@
         </div>
 
         <SubTitle text="Team Plan" />
-        <div class="plan-content" style="height: 100%; border-radius: 0 0 4px 4px">
+        <div class="team-plan-content" style="height: 100%; border-radius: 0 0 4px 4px">
           <GroupRoom class="group-room" @click="createGroup" title="그룹 생성" />
-          <GroupRoom :img="img" :title="title" :createdAt="createdAt" />
+          <ol v-if="!loading" v-for="group in groupsData">
+            <GroupRoom :img="group.thumbnailPath" :title="group.name" :createdAt="createdAt" />
+          </ol>
+
+          <!-- 데이터 로딩중일때 -->
+          <div v-else>
+            <Progress />
+          </div>
         </div>
       </div>
     </div>
@@ -32,22 +39,45 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
+import { groupsStore } from '@/store/group'
 import SubTitle from './atom/SubTitle.vue'
 import GroupRoom from './GroupRoom.vue'
 import Top from './right/HeaderSection.vue'
 import DatePicker from './right/DateSelect.vue'
 import Bottom from './right/Footer.vue'
 import GroupMake from '@/components/Group/GroupCreate.vue'
+import Progress from '@/components/Progress.vue'
 
 const title = '박철현님의 일정'
 const createdAt = '1시간전'
 
 const groupModal = ref(false)
+const groupsData = ref([])
+const loading = ref(true)
 
 const createGroup = () => {
   groupModal.value = !groupModal.value
 }
+
+const fetchGroups = async () => {
+  try {
+    await groupsStore().getGroups()
+    groupsData.value = groupsStore().groups
+  } catch (error) {
+    console.log('그룹 데이터 실패', error)
+  } finally {
+    loading.value = false
+  }
+}
+watch(()=>groupsStore().groups,(newGroups)=>{
+  groupsData.value=newGroups
+  console.log(newGroups)
+},{immediate:true})
+
+onMounted(() => {
+  fetchGroups()
+})
 </script>
 
 <style lang="scss" scoped>
@@ -101,7 +131,8 @@ const createGroup = () => {
         padding: 12px;
         border-radius: 4px 4px 0 0;
       }
-      .plan-content {
+      .plan-content,
+      .team-plan-content {
         background-color: #ffffff;
         padding: 12px;
         display: flex;
@@ -109,6 +140,10 @@ const createGroup = () => {
         .group-room {
           color: #363bc9;
         }
+      }
+      .team-plan-content {
+        overflow-y: auto;
+        scrollbar-color: #8487e2 #f6f6f8;
       }
     }
   }
