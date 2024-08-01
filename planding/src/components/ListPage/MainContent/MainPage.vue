@@ -47,7 +47,6 @@ const groupModal = ref(false)
 
 const createGroup = () => {
   groupModal.value = !groupModal.value
-  console.log(groupModal.value)
 }
 </script>
 
@@ -109,10 +108,6 @@ const createGroup = () => {
         flex-wrap: wrap;
         .group-room {
           color: #363bc9;
-          cursor: pointer;
-          transition:
-            transform 0.3s ease,
-            box-shadow 0.3s ease;
         }
       }
     }

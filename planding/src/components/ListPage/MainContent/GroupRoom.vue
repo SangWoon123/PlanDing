@@ -26,10 +26,17 @@ const props = defineProps({
   height: 178px;
   padding: 12px;
   margin: 0 12px 0 0;
+  cursor: pointer;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  &:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
 
   figure {
     display: flex;
-    background-color: #B2B7FF;
+    background-color: #b2b7ff;
     width: 199px;
     height: 120px;
     border-radius: 4px;
