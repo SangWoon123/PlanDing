@@ -5,6 +5,8 @@ import 'vuetify/styles'
 // Vuetify
 import { createVuetify } from 'vuetify'
 import { VCalendar } from 'vuetify/labs/VCalendar'
+import { VDateInput } from 'vuetify/labs/VDateInput'
+
 import { ko } from 'vuetify/locale'
 
 export default createVuetify({
@@ -14,6 +16,7 @@ export default createVuetify({
     messages: { ko }
   },
   components: {
-    VCalendar
+    VCalendar,
+    VDateInput
   }
 })

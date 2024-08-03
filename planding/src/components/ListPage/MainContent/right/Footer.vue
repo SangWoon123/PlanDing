@@ -23,8 +23,8 @@ import SimpleSchedule from './SimpleSchedule.vue'
   flex-direction: column;
   align-items: center;
   width: 280px;
-  height: 340px;
-  border: 2px solid #a2a3b6;
+  height: 350px;
+  border: 2px solid #c0c2f5;
   border-radius: 4px;
   position: relative;
   .header {

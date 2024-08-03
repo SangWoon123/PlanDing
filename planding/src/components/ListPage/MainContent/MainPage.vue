@@ -14,7 +14,12 @@
         <div class="team-plan-content" style="height: 100%; border-radius: 0 0 4px 4px">
           <GroupRoom class="group-room" @click="createGroup" title="그룹 생성" />
           <ol v-if="!loading" v-for="group in groupsData">
-            <GroupRoom :img="group.thumbnailPath" :title="group.name" :createdAt="createdAt" />
+            <GroupRoom
+              @click="navigatorToGroup(group)"
+              :img="group.thumbnailPath"
+              :title="group.name"
+              :createdAt="createdAt"
+            />
           </ol>
 
           <!-- 데이터 로딩중일때 -->
@@ -39,7 +44,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref } from 'vue'
 import { groupsStore } from '@/store/group'
 import SubTitle from './atom/SubTitle.vue'
 import GroupRoom from './GroupRoom.vue'
@@ -48,8 +53,8 @@ import DatePicker from './right/DateSelect.vue'
 import Bottom from './right/Footer.vue'
 import GroupMake from '@/components/Group/GroupCreate.vue'
 import Progress from '@/components/Progress.vue'
+import router from '@/router'
 
-const title = '박철현님의 일정'
 const createdAt = '1시간전'
 
 const groupModal = ref(false)
@@ -58,6 +63,12 @@ const loading = ref(true)
 
 const createGroup = () => {
   groupModal.value = !groupModal.value
+}
+
+const navigatorToGroup = (group) => {
+  router.push({
+    path: `/group/${group.code}`
+  })
 }
 
 const fetchGroups = async () => {
@@ -70,11 +81,6 @@ const fetchGroups = async () => {
     loading.value = false
   }
 }
-watch(()=>groupsStore().groups,(newGroups)=>{
-  groupsData.value=newGroups
-  console.log(newGroups)
-},{immediate:true})
-
 onMounted(() => {
   fetchGroups()
 })
