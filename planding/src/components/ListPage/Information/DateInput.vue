@@ -7,7 +7,6 @@
       :display-value="model"
       v-model="model"
       max-width="368"
-      :placeholder="today"
       show-adjacent-months
     ></v-date-input>
   </div>

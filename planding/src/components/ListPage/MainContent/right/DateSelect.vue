@@ -6,6 +6,7 @@
     :month-format="getMonth"
     class="date-picker"
     locale="ko-KR"
+    color="#585BB2"
   >
   </v-date-picker>
 </template>
