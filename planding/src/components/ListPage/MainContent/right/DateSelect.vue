@@ -1,39 +1,58 @@
 <template>
   <v-date-picker
+    v-model="date"
     show-adjacent-months
+    :weekday-format="getDay"
     hide-header
     bg-color="#F6F6F8"
-    :month-format="getMonth"
     class="date-picker"
-    locale="ko-KR"
-    color="#585BB2"
+    color="#C6C8F2"
   >
   </v-date-picker>
 </template>
 
 <script setup>
-const getMonth = (date) => {
-  const months = [
-    '1월',
-    '2월',
-    '3월',
-    '4월',
-    '5월',
-    '6월',
-    '7월',
-    '8월',
-    '9월',
-    '10월',
-    '11월',
-    '12월'
-  ]
-  return months[date.getMonth()]
+import { ref, watch } from 'vue'
+import { useDateStore } from '@/store/date'
+const date = ref(new Date())
+const dateStore = useDateStore()
+
+function getDay(date) {
+  const daysOfWeek = ['1', '2', '화', '수', '목', '금', '토']
+  let i = new Date(date).getDay(date)
+  return daysOfWeek[i]
 }
+
+watch(date, (newVal) => {
+  dateStore.setDate(newVal)
+})
 </script>
 
 <style lang="scss" scoped>
 .date-picker {
   transform: scale(0.9);
   border-radius: 8px;
+}
+:deep(.v-date-picker-controls__month) {
+  color: #656ae6 !important;
+  // 버튼
+  :nth-child(1) {
+    color: #5f64d9;
+  }
+}
+
+:deep(.v-btn--icon) {
+  border-radius: 4px !important;
+  background-color: inherit;
+}
+:deep(.v-btn__content) {
+  color: #585bb2;
+}
+
+:deep(.v-date-picker-controls .v-btn__content) {
+  font-size: 20px !important;
+}
+:deep(.v-date-picker-month__weekday) {
+  color: #BABBDD !important;
 }
 </style>
