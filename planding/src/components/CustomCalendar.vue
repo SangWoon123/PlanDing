@@ -8,16 +8,25 @@
       :events="events"
       :view-mode="view_mode"
     >
+      <template v-slot:day="day">
+        <div class="tw-h-full" @click="openModalDay(day)" />
+      </template>
+
       <template v-slot:header="{ title }">
-        <v-toolbar style="display: flex; align-items: center" flat>
-          <!-- 기본 네비게이션 버튼 (이전, 오늘, 다음) -->
-          <v-btn color="#7F83EA" icon @click="prev">
-            <v-icon>mdi-menu-left</v-icon>
-          </v-btn>
-          <v-btn  flat :text="title" icon @click="toToday" />
-          <v-btn color="#7F83EA" icon @click="next">
-            <v-icon>mdi-menu-right</v-icon>
-          </v-btn>
+        <v-toolbar class="header" flat>
+          <div>
+            <v-btn color="#7F83EA" @click="prev">
+              <figure>
+                <img src="../assets/left.png" alt="Previous arrow" />
+              </figure>
+            </v-btn>
+            <v-btn class="today" flat :text="title" icon @click="toToday" />
+            <v-btn color="#7F83EA" icon @click="next">
+              <figure>
+                <img src="../assets/right.png" alt="Previous arrow" />
+              </figure>
+            </v-btn>
+          </div>
           <v-spacer></v-spacer>
 
           <!-- 보기 모드 토글 버튼 -->
@@ -40,11 +49,24 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/store/store'
 import { scheduleStore } from '@/store/schedule'
 import { Stomp } from '@stomp/stompjs'
+import { useDateStore } from '@/store/date'
+
+const dateStore = useDateStore()
+
+const calendar = ref(null)
+
+// 달력선택시 해당 주로 변경
+watch(
+  () => dateStore.selectedDate,
+  (newDate) => {
+    value.value = [newDate]
+  }
+)
 
 //socket
 const VITE_APP_WEBSOCKET_URL = import.meta.env.VITE_APP_WEBSOCKET_URL
@@ -54,7 +76,7 @@ const headers = {
   Authorization: `Bearer ${userStore.accessToken}`,
   groupCode: route.params.groupCode
 }
-let client
+const client = ref(null)
 
 const weekday = ref([0, 1, 2, 3, 4, 5, 6])
 const colors = ['#8487e2', '#5f64d9', '#656ae6']
@@ -88,8 +110,7 @@ function prev() {
   }
 }
 
-function toToday(a) {
-  console.log(a)
+function toToday() {
   value.value = new Date()
 }
 
@@ -129,7 +150,7 @@ function deleteEvent(index) {
   const data = {
     scheduleId: index
   }
-  client.send(`/pub/schedule/delete/${headers.groupCode}`, {}, JSON.stringify(data))
+  client.value.send(`/pub/schedule/delete/${headers.groupCode}`, {}, JSON.stringify(data))
 }
 function handleWebSocketMessage(message) {
   const data = JSON.parse(message.body).data
@@ -148,9 +169,9 @@ function handleWebSocketMessage(message) {
 }
 
 async function fetchData() {
-  client = Stomp.client(`${VITE_APP_WEBSOCKET_URL}/api/v1/ws`)
-  client.connect(headers, () => {
-    client.subscribe(`/sub/schedule/${headers.groupCode}`, handleWebSocketMessage)
+  client.value = Stomp.client(`${VITE_APP_WEBSOCKET_URL}/api/v1/ws`)
+  client.value.connect(headers, () => {
+    client.value.subscribe(`/sub/schedule/${headers.groupCode}`, handleWebSocketMessage)
   })
 
   const schedules = await scheduleStore().getGroupScheduleOfWeek(
@@ -176,7 +197,7 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .calendar {
   background-color: #fdfdfd;
 }
@@ -193,8 +214,8 @@ onMounted(() => {
 }
 .delete-btn {
   background-color: #f75e56;
-  width: 15px;
-  height: 15px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   position: absolute;
   top: 4px;
@@ -213,5 +234,19 @@ onMounted(() => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+:deep(.bg-primary) {
+  background-color: #656ae6 !important;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px 0 2px;
+  .today {
+    margin: 0 10px;
+  }
 }
 </style>
