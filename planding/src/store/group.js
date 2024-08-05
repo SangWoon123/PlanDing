@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { authInstance } from '@/api/authAxios'
 
-export const groupsStore = defineStore('group', {
+export const userGroupsStore = defineStore('group', {
   state: () => ({
     groups: [],
     selectGroup: {}

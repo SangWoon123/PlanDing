@@ -49,15 +49,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, inject } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/store/store'
 import { scheduleStore } from '@/store/schedule'
-import { Stomp } from '@stomp/stompjs'
 import { useDateStore } from '@/store/date'
 
 const dateStore = useDateStore()
-
 const calendar = ref(null)
 
 // 달력선택시 해당 주로 변경
@@ -69,19 +67,18 @@ watch(
 )
 
 //socket
-const VITE_APP_WEBSOCKET_URL = import.meta.env.VITE_APP_WEBSOCKET_URL
 const userStore = useAuthStore()
 const route = useRoute()
 const headers = {
   Authorization: `Bearer ${userStore.accessToken}`,
   groupCode: route.params.groupCode
 }
-const client = ref(null)
+const client = inject('websocketClient')
 
 const weekday = ref([0, 1, 2, 3, 4, 5, 6])
 const colors = ['#8487e2', '#5f64d9', '#656ae6']
 const view_mode = ref('month')
-const value = ref(new Date())
+const value = ref([new Date()])
 const events = ref([])
 const { startDay, endDay } = getWeekDays()
 
@@ -152,6 +149,7 @@ function deleteEvent(index) {
   }
   client.value.send(`/pub/schedule/delete/${headers.groupCode}`, {}, JSON.stringify(data))
 }
+
 function handleWebSocketMessage(message) {
   const data = JSON.parse(message.body).data
   if (data.action === 'CREATE') {
@@ -169,7 +167,6 @@ function handleWebSocketMessage(message) {
 }
 
 async function fetchData() {
-  client.value = Stomp.client(`${VITE_APP_WEBSOCKET_URL}/api/v1/ws`)
   client.value.connect(headers, () => {
     client.value.subscribe(`/sub/schedule/${headers.groupCode}`, handleWebSocketMessage)
   })

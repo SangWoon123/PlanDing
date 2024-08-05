@@ -30,17 +30,14 @@ import DatePicker from '../MainContent/right/DateSelect.vue'
 import Top from '../MainContent/right/HeaderSection.vue'
 import UsersProfile from './UsersProfile.vue'
 import ScheduleCreate from './ScheduleCreate.vue'
-import { onMounted, onUnmounted, ref } from 'vue'
-import { groupsStore } from '@/store/group'
+import { onMounted, onUnmounted, provide, ref } from 'vue'
+import { userGroupsStore } from '@/store/group'
 import { useRoute } from 'vue-router'
-import { useAuthStore } from '@/store/store'
 import { Stomp } from '@stomp/stompjs'
 
-const userStore = useAuthStore()
-const groupStore = groupsStore()
+const groupStore = userGroupsStore()
 const route = useRoute()
 const groupInfo = ref({})
-const meesage = ref({})
 
 const fetchGroupInfo = async () => {
   const groupCode = route.params.groupCode
@@ -49,29 +46,22 @@ const fetchGroupInfo = async () => {
 }
 
 //웹소켓 연결
-let client;
+const client = ref(null)
 const connectWebsocket = () => {
   const VITE_APP_WEBSOCKET_URL = import.meta.env.VITE_APP_WEBSOCKET_URL
-  client = Stomp.client(`${VITE_APP_WEBSOCKET_URL}/api/v1/ws`)
-  const headers = {
-    Authorization: `Bearer ${userStore.accessToken}`,
-    groupCode: route.params.groupCode
-  }
-  client.connect(headers, function () {
-    client.subscribe(`/sub/schedule/${headers.groupCode}`, function (message) {
-      meesage.value = JSON.parse(message.body).data
-    })
-  })
+  client.value = Stomp.client(`${VITE_APP_WEBSOCKET_URL}/api/v1/ws`)
+  return client
 }
+
+provide('websocketClient', connectWebsocket())
 
 // 컴포넌트가 마운트될 때 그룹 정보를 가져옴
 onMounted(() => {
   fetchGroupInfo()
-  connectWebsocket()
 })
 
 onUnmounted(() => {
-  client.disconnect()
+  client.value.disconnect()
 })
 </script>
 
@@ -153,6 +143,7 @@ onUnmounted(() => {
       .team-plan-content {
         overflow-y: auto;
         scrollbar-color: #8487e2 #f6f6f8;
+        scrollbar-width: 1px;
       }
     }
   }

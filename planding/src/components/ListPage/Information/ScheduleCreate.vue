@@ -27,11 +27,10 @@
 </template>
 
 <script setup>
-import { ref,onMounted } from 'vue'
+import { ref, inject } from 'vue'
 import DateInput from './DateInput.vue'
 import TimePicker from './TimePicker.vue'
 import { useRoute } from 'vue-router'
-import { Stomp } from '@stomp/stompjs'
 import { useAuthStore } from '@/store/store'
 
 const userStore = useAuthStore()
@@ -43,9 +42,8 @@ const startTime = ref(null)
 const endTime = ref(null)
 const scheduleDate = ref(null)
 
-const VITE_APP_WEBSOCKET_URL = import.meta.env.VITE_APP_WEBSOCKET_URL
+const client = inject('websocketClient')
 
-let client
 const headers = {
   Authorization: `Bearer ${userStore.accessToken}`,
   groupCode: route.params.groupCode
@@ -59,20 +57,8 @@ const createSchedule = () => {
     endTime: endTime.value,
     scheduleDate: scheduleDate.value
   }
-  client.send(`/pub/schedule/create/${headers.groupCode}`, {}, JSON.stringify(postInfo))
+  client.value.send(`/pub/schedule/create/${headers.groupCode}`, {}, JSON.stringify(postInfo))
 }
-
-const handleWebSocketMessage = (message) => {
-  const data = JSON.parse(message.body).data
-  console.log(data)
-}
-
-onMounted(() => {
-  client = Stomp.client(`${VITE_APP_WEBSOCKET_URL}/api/v1/ws`)
-  client.connect(headers, () => {
-    client.subscribe(`/sub/schedule/${headers.groupCode}`, handleWebSocketMessage)
-  })
-})
 </script>
 
 <style lang="scss" scoped>
