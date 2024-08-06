@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { authInstance } from '@/api/authAxios'
+import { authInstance } from '@/service/authAxios'
 
 export const scheduleStore = defineStore('schedule', {
   state: () => ({
