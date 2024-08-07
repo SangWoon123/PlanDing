@@ -1,26 +1,33 @@
 <template>
   <section id="container">
-    <div class="left"></div>
+    <LeftComponent :favoriteGroup="groupStore.favoriteGroups" />
     <div class="mid">
       <div class="inner">
         <div class="title">PlanDing</div>
 
         <SubTitle text="My Plan" />
         <div class="plan-content" :style="{ height: height }">
-          <GroupRoom :img="img" :title="title" :createdAt="createdAt" />
+          <GroupRoom
+            @click="navigatorToPersonal"
+            :img="img"
+            title="김상운 개인플래너"
+            :createdAt="createdAt"
+          />
         </div>
 
         <SubTitle text="Team Plan" />
         <div class="team-plan-content" style="height: 100%; border-radius: 0 0 4px 4px">
           <GroupRoom class="group-room" @click="createGroup" title="그룹 생성" />
-          <ol v-if="!loading" v-for="group in groupsData">
-            <GroupRoom
-              @click="navigatorToGroup(group)"
-              :img="group.thumbnailPath"
-              :title="group.name"
-              :createdAt="createdAt"
-            />
-          </ol>
+          <div v-if="!loading" v-for="group in groupStore.groups" :key="group.id">
+            <MouseOver :groupCode="group.code" :bookmark="isBookmarked(group.code)">
+              <GroupRoom
+                @click="navigatorToGroup(group)"
+                :img="group.thumbnailPath"
+                :title="group.name"
+                :createdAt="createdAt"
+              />
+            </MouseOver>
+          </div>
 
           <!-- 데이터 로딩중일때 -->
           <div v-else>
@@ -32,10 +39,10 @@
     <div class="right">
       <Top />
       <DatePicker />
-      <Bottom />
+      <Footer :data="todaySchedule" />
     </div>
     <!-- Group 모달 -->
-    <GroupMake
+    <GroupCreate
       v-if="groupModal"
       @closeModal="groupModal.value = false"
       @close="groupModal = false"
@@ -45,24 +52,33 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import { groupsStore } from '@/store/group'
+import { userGroupsStore } from '@/store/group'
 import SubTitle from './atom/SubTitle.vue'
 import GroupRoom from './GroupRoom.vue'
 import Top from './right/HeaderSection.vue'
 import DatePicker from './right/DateSelect.vue'
-import Bottom from './right/Footer.vue'
-import GroupMake from '@/components/Group/GroupCreate.vue'
+import Footer from './right/Footer.vue'
+import GroupCreate from '@/components/Group/GroupCreate.vue'
 import Progress from '@/components/Progress.vue'
 import router from '@/router'
+import { authInstance } from '@/service/authAxios'
+import MouseOver from '@/components/SmallTools/MouseOver.vue'
+import LeftComponent from './left/LeftComponent.vue'
 
 const createdAt = '1시간전'
 
 const groupModal = ref(false)
-const groupsData = ref([])
 const loading = ref(true)
+const todaySchedule = ref([])
+
+const groupStore = userGroupsStore()
 
 const createGroup = () => {
   groupModal.value = !groupModal.value
+}
+
+function isBookmarked(groupCode) {
+  return groupStore.favoriteGroups.some((group) => group.code === groupCode)
 }
 
 const navigatorToGroup = (group) => {
@@ -71,18 +87,35 @@ const navigatorToGroup = (group) => {
   })
 }
 
+function navigatorToPersonal() {
+  router.push({
+    path: '/personal'
+  })
+}
+
 const fetchGroups = async () => {
   try {
-    await groupsStore().getGroups()
-    groupsData.value = groupsStore().groups
+    await groupStore.getGroups()
+    loading.value = false
   } catch (error) {
     console.log('그룹 데이터 실패', error)
   } finally {
     loading.value = false
   }
 }
-onMounted(() => {
+
+async function showTodaySchedule() {
+  const response = await authInstance('/api/v1/common/schedule/today').get()
+  return response.data.data
+}
+
+onMounted(async () => {
+  // 유저 그룹 가져오기
   fetchGroups()
+  // 오늘 스케줄
+  todaySchedule.value = await showTodaySchedule()
+  // 즐겨찾기 그룹
+  await groupStore.getFavoriteGroups()
 })
 </script>
 
@@ -145,6 +178,7 @@ onMounted(() => {
         flex-wrap: wrap;
         .group-room {
           color: #363bc9;
+          font-weight: 600;
         }
       }
       .team-plan-content {
