@@ -9,8 +9,8 @@
             icon="$vuetify"
             width="450px"
             height="150px"
-            color="#ECEDED"
             elevation="2"
+            color="deep-purple-lighten-5"
             closable
             @click:close="handleClose(item)"
           >
