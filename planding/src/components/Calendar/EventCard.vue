@@ -30,7 +30,6 @@
 import Avatar from '../SmallTools/Avatar.vue'
 import EventCardDetail from './EventCardDetail.vue'
 import { defineEmits, ref } from 'vue'
-import { getGroupScheduleInfo } from '@/service/scheduleController'
 import { useRoute } from 'vue-router'
 import { usegroupScheduleStore } from '@/store/groupSchedule'
 
@@ -44,11 +43,10 @@ defineProps({
 
 const emit = defineEmits(['deleteEvent'])
 const groupCode = useRoute().params.groupCode
-const groupScheduleInfo = ref(null)
 
 async function handleCardClick(event) {
   if (isMenuActive.value) {
-    groupScheduleInfo.value = await getGroupScheduleInfo(groupCode, event.id)
+    await groupScheduleStore.groupScheduleInfo(groupCode, event.id)
   }
 }
 

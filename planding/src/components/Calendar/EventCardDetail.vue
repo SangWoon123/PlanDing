@@ -32,7 +32,11 @@
         </v-expansion-panel-title>
         <v-expansion-panel-text>
           <div v-for="i in group.userScheduleAttendances">
-            <div class="attendance" v-if="i.status === 'POSSIBLE'">
+            <div class="attendance" v-if="i.userCode !== userStore.userCode">
+              <span>{{ i.userName }}</span>
+              <v-chip variant="outlined"> 참여</v-chip>
+            </div>
+            <div class="attendance" v-else-if="i.status === 'POSSIBLE'">
               <span>{{ i.userName }}</span>
               <v-btn
                 @click="handleAttandance(event.id, 'IMPOSSIBLE')"
@@ -93,32 +97,21 @@ function deleteEvent(id) {
   deleteAlert.value = false
   emit('deleteEvent', id)
 }
-function handleAttandance(scheduleId, status) {
-  participationGroupSchedule(scheduleId, status)
-
+async function handleAttandance(scheduleId, status) {
+  await participationGroupSchedule(scheduleId, status)
   const schedule = groupSchedule.groupSchedules.find((schedule) => schedule.id === scheduleId)
-
   if (schedule) {
     const userAttendance = schedule.userScheduleAttendances.find(
       (user) => user.userCode === userStore.userCode
     )
-
-    if (status === 'POSSIBLE') {
-      if (!userAttendance) {
-        // 참여자 추가
-        schedule.userScheduleAttendances.push({
-          userCode: userStore.userCode,
-          userName: userStore.userName,
-          status: 'POSSIBLE'
-        })
-      }
-    } else if (status === 'IMPOSSIBLE') {
-      if (userAttendance) {
-        // 참여자 삭제
-        schedule.userScheduleAttendances = schedule.userScheduleAttendances.filter(
-          (user) => user.userCode !== userStore.userCode
-        )
-      }
+    if (userAttendance) {
+      userAttendance.status = status
+    } else if (status === 'POSSIBLE') {
+      schedule.userScheduleAttendances.push({
+        userCode: userStore.userCode,
+        userName: userStore.userName,
+        status: 'POSSIBLE'
+      })
     }
   }
 }

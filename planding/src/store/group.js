@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { authInstance } from '@/service/authAxios'
 import { deleteGroup } from '@/service/groupController'
-import { postFavorite, getFavoriteList } from '@/service/favoriteController'
+import { getFavoriteList } from '@/service/favoriteController'
 
 export const userGroupsStore = defineStore('group', {
   state: () => ({

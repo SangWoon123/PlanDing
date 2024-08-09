@@ -41,7 +41,6 @@ import { useDateStore } from '@/store/date'
 import { getAllGroupSchedule } from '@/service/scheduleController'
 import { usegroupScheduleStore } from '@/store/groupSchedule'
 
-
 const groupScheduleStore = usegroupScheduleStore()
 const dateStore = useDateStore()
 const calendar = ref(null)
@@ -176,15 +175,13 @@ async function fetchData() {
   })
 }
 
-
-
 async function fetchGroupSchedule() {
   const groupCode = useRoute().params.groupCode
   groupScheduleStore.groupSchedules = await getAllGroupSchedule(groupCode)
 }
 
 onMounted(() => {
-  // 
+  //
   fetchData()
   // 그룹 스케줄 전부 가져온다
   fetchGroupSchedule()
