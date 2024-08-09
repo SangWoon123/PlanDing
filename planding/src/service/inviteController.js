@@ -12,3 +12,12 @@ export const postInvitation = async (groupCode, userCode) => {
     console.log('postInvitation 오류', error)
   }
 }
+
+export const getInvitation=async()=>{
+  try{
+    const response=await authInstance('/api/v1/invitation').get('')
+    return response.data.data
+  }catch(error){
+    console.error(error)
+  }
+}
