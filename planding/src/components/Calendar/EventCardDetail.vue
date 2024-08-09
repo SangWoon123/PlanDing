@@ -38,7 +38,6 @@
                 @click="handleAttandance(event.id, 'IMPOSSIBLE')"
                 variant="outlined"
                 color="error"
-                :ripple="false"
                 >참여 취소</v-btn
               >
             </div>
@@ -46,7 +45,6 @@
         </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
-
     <div class="button-container">
       <v-btn
         @click="handleAttandance(event.id, 'POSSIBLE')"
@@ -62,9 +60,12 @@
 <script setup>
 import DeleteAlert from '../SmallTools/DeleteAlert.vue'
 import { participationGroupSchedule } from '@/service/attendaceController'
-
+import { usegroupScheduleStore } from '@/store/groupSchedule'
+import { useAuthStore } from '@/store/store'
 import { ref } from 'vue'
 
+const userStore = useAuthStore()
+const groupSchedule = usegroupScheduleStore()
 const deleteAlert = ref(false)
 defineProps({
   event: Object,
@@ -94,6 +95,32 @@ function deleteEvent(id) {
 }
 function handleAttandance(scheduleId, status) {
   participationGroupSchedule(scheduleId, status)
+
+  const schedule = groupSchedule.groupSchedules.find((schedule) => schedule.id === scheduleId)
+
+  if (schedule) {
+    const userAttendance = schedule.userScheduleAttendances.find(
+      (user) => user.userCode === userStore.userCode
+    )
+
+    if (status === 'POSSIBLE') {
+      if (!userAttendance) {
+        // 참여자 추가
+        schedule.userScheduleAttendances.push({
+          userCode: userStore.userCode,
+          userName: userStore.userName,
+          status: 'POSSIBLE'
+        })
+      }
+    } else if (status === 'IMPOSSIBLE') {
+      if (userAttendance) {
+        // 참여자 삭제
+        schedule.userScheduleAttendances = schedule.userScheduleAttendances.filter(
+          (user) => user.userCode !== userStore.userCode
+        )
+      }
+    }
+  }
 }
 </script>
 

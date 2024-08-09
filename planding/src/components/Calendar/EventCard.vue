@@ -11,13 +11,13 @@
           {{ `${formatedDate(event.start)} - ${formatedDate(event.end)}` }}
         </span>
         <span class="event-title">{{ event.title }}</span>
-        <Avatar :size="6"/>
+        <Avatar :size="computedAvatarSize(event.id)" />
       </v-card>
     </template>
 
     <!-- 카드 디자인 -->
     <EventCardDetail
-      :group="groupScheduleInfo"
+      :group="detailGroup(event.id)"
       :event="event"
       @deleteEvent="deleteEvent"
       @closeModal="closeModal"
@@ -29,18 +29,19 @@
 <script setup>
 import Avatar from '../SmallTools/Avatar.vue'
 import EventCardDetail from './EventCardDetail.vue'
-import { useAuthStore } from '@/store/store'
 import { defineEmits, ref } from 'vue'
 import { getGroupScheduleInfo } from '@/service/scheduleController'
 import { useRoute } from 'vue-router'
+import { usegroupScheduleStore } from '@/store/groupSchedule'
 
-const userStore = useAuthStore()
+const groupScheduleStore = usegroupScheduleStore()
 const isVisible = ref(true)
 const isMenuActive = ref(false)
 
 defineProps({
   event: Object
 })
+
 const emit = defineEmits(['deleteEvent'])
 const groupCode = useRoute().params.groupCode
 const groupScheduleInfo = ref(null)
@@ -49,6 +50,17 @@ async function handleCardClick(event) {
   if (isMenuActive.value) {
     groupScheduleInfo.value = await getGroupScheduleInfo(groupCode, event.id)
   }
+}
+
+function detailGroup(scheduleId) {
+  const schedule = groupScheduleStore.groupSchedules.find((schedule) => schedule.id === scheduleId)
+  return schedule
+}
+
+const computedAvatarSize = (scheduleId) => {
+  const schedule = groupScheduleStore.groupSchedules.find((s) => s.id === scheduleId)
+  if (!schedule) return 0
+  return schedule.userScheduleAttendances.filter((user) => user.status === 'POSSIBLE').length
 }
 
 function formatedDate(date) {
