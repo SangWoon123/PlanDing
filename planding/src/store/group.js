@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { authInstance } from '@/service/authAxios'
-import { deleteGroup } from '@/service/groupController'
+import { deleteGroup, leaveGroup } from '@/service/groupController'
 import { getFavoriteList } from '@/service/favoriteController'
 
 export const userGroupsStore = defineStore('group', {
@@ -27,6 +27,15 @@ export const userGroupsStore = defineStore('group', {
         this.groups = this.groups.filter((group) => group.code !== groupCode)
       } catch (error) {
         console.error('그룹 삭제 실패: ', error)
+      }
+    },
+    //그룹나가기
+    async leaveGroup(groupCode) {
+      try {
+        await leaveGroup(groupCode)
+        this.groups = this.groups.filter((group) => group.code !== groupCode)
+      } catch (error) {
+        console.error('그룹 떠나기 실패: ', error)
       }
     },
     async handleFavorite(groupCode) {

@@ -8,9 +8,13 @@
           <div class="hover-btn">
             <v-btn
               @click="handleFavorite(groupCode)"
-              :icon="test ? 'mdi-bookmark' : 'mdi-bookmark-outline'"
-              class="mr-2"
+              :icon="bookmark ? 'mdi-bookmark' : 'mdi-bookmark-outline'"
             />
+            <v-btn
+              @click="handleAlarm(groupCode)"
+              :icon="alarm ? 'mdi-bell-ring' : 'mdi-bell-ring-outline'"
+            />
+
             <v-btn @click="handlerDeleteGroup(groupCode)" icon="mdi-trash-can-outline" />
           </div>
         </div>
@@ -23,6 +27,7 @@
 import { ref, watch } from 'vue'
 import { userGroupsStore } from '@/store/group'
 import { postFavorite, deleteFavorite } from '@/service/favoriteController'
+import { updateGroupAlarmSetting } from '@/service/alarmController'
 
 const props = defineProps({
   bookmark: Boolean,
@@ -30,11 +35,12 @@ const props = defineProps({
 })
 
 const groupStore = userGroupsStore()
-const test = ref(props.bookmark)
+const bookmark = ref(props.bookmark)
+const alarm = ref(true)
 
 async function handleFavorite(groupCode) {
   try {
-    if (test.value) {
+    if (bookmark.value) {
       const response = await deleteFavorite(groupCode)
       groupStore.favoriteGroups = groupStore.favoriteGroups.filter(
         (group) => group.code !== groupCode
@@ -52,18 +58,32 @@ async function handleFavorite(groupCode) {
   } catch (error) {
     console.log(error)
   } finally {
-    test.value = !test.value
+    bookmark.value = !bookmark.value
   }
 }
 
 function handlerDeleteGroup(groupCode) {
-  groupStore.handlerDeleteGroup(groupCode)
+  groupStore.leaveGroup(groupCode)
+}
+
+function handleAlarm(groupCode) {
+  try {
+    if (alarm.value) {
+      const response = updateGroupAlarmSetting(groupCode, false)
+    } else {
+      const response = updateGroupAlarmSetting(groupCode, true)
+    }
+  } catch (error) {
+    console.error(error)
+  } finally {
+    alarm.value = !alarm.value
+  }
 }
 
 watch(
   () => props.bookmark,
   (newVal) => {
-    test.value = newVal
+    bookmark.value = newVal
   }
 )
 </script>
@@ -84,9 +104,6 @@ watch(
   right: 0;
   width: 20px;
   height: 20px;
-}
-
-.hover-btn {
 }
 
 .mouse-over {
