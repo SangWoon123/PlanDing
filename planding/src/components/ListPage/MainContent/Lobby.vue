@@ -37,25 +37,24 @@
       </div>
     </div>
     <div class="right">
-      <Top />
+      <HeaderSection :invitations="alarmStore.invites" :schedules="alarmStore.scheduleAlarm" />
       <DatePicker />
       <Footer :data="todaySchedule" />
     </div>
     <!-- Group 모달 -->
-    <GroupCreate
-      v-if="groupModal"
-      @closeModal="groupModal.value = false"
-      @close="groupModal = false"
-    />
+    <GroupCreate v-if="groupModal" @closeModal="groupModal = false" @close="groupModal = false" />
+    <!-- 알람 -->
+    <GlobalAlert :data="data" @remove="removeAlert" />
+    <InviteAlert :data="invite" @remove="removeAlert" />
   </section>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, provide } from 'vue'
 import { userGroupsStore } from '@/store/group'
 import SubTitle from './atom/SubTitle.vue'
 import GroupRoom from './GroupRoom.vue'
-import Top from './right/HeaderSection.vue'
+import HeaderSection from './right/HeaderSection.vue'
 import DatePicker from './right/DateSelect.vue'
 import Footer from './right/Footer.vue'
 import GroupCreate from '@/components/Group/GroupCreate.vue'
@@ -64,6 +63,10 @@ import router from '@/router'
 import { authInstance } from '@/service/authAxios'
 import MouseOver from '@/components/SmallTools/MouseOver.vue'
 import LeftComponent from './left/LeftComponent.vue'
+import { useAlarmStore } from '@/store/alarm'
+import { sseConnect } from '@/service/sseService'
+import GlobalAlert from '../../SmallTools/ScheduleAlarm.vue'
+import InviteAlert from '../../SmallTools/InviteAlarm.vue'
 
 const createdAt = '1시간전'
 
@@ -72,6 +75,7 @@ const loading = ref(true)
 const todaySchedule = ref([])
 
 const groupStore = userGroupsStore()
+const alarmStore = useAlarmStore()
 
 const createGroup = () => {
   groupModal.value = !groupModal.value
@@ -109,14 +113,62 @@ async function showTodaySchedule() {
   return response.data.data
 }
 
+async function fetchAlarmMessage() {
+  alarmStore.getInvites()
+  alarmStore.getSchedule()
+}
+
 onMounted(async () => {
+  //SSE
+  if (!connect.value) {
+    initializeConnection()
+  }
   // 유저 그룹 가져오기
   fetchGroups()
   // 오늘 스케줄
   todaySchedule.value = await showTodaySchedule()
   // 즐겨찾기 그룹
   await groupStore.getFavoriteGroups()
+  // 초대
+  fetchAlarmMessage()
 })
+
+const data = ref([])
+const invite = ref([])
+const connect = ref(null)
+
+function initializeConnection() {
+  if (connect.value) {
+    connect.value.close()
+  }
+  connect.value = sseConnect()
+
+  connect.value.onopen = () => {
+    console.log('Connection to server opened.')
+  }
+
+  connect.value.onmessage = (e) => {
+    const parsedData = JSON.parse(e.data)
+    if (parsedData.notificationType === 'INVITE') {
+      alarmStore.invites.push(parsedData)
+    } else if (
+      parsedData.notificationType === 'PERSONAL_SCHEDULE' ||
+      parsedData.notificationType === 'GROUP_SCHEDULE'
+    ) {
+      alarmStore.scheduleAlarm.push(parsedData)
+    }
+  }
+
+  connect.value.error = (e) => {
+    console.log(e.code, e.wasClean)
+    setTimeout(initializeConnection, 3000)
+  }
+}
+provide('sse', connect)
+
+function removeAlert(item) {
+  data.value = data.value.filter((alert) => alert.id !== item.scheduleId)
+}
 </script>
 
 <style lang="scss" scoped>

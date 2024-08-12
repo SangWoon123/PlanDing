@@ -8,10 +8,6 @@
       :events="events"
       :view-mode="view_mode"
     >
-      <template v-slot:day="day">
-        <div @click="openModalDay(day)" />
-      </template>
-
       <template v-slot:header="{ title }">
         <CalendarNavigation
           :title="title"
@@ -31,19 +27,26 @@
 </template>
 
 <script setup>
+import { useDateStore } from '@/store/date'
 import CalendarNavigation from './CalendarNavigation.vue'
 import EventCard from './EventCard.vue'
-import { ref, onMounted, watch, inject } from 'vue'
-import { useRoute } from 'vue-router'
-import { useAuthStore } from '@/store/store'
-import { scheduleStore } from '@/store/schedule'
-import { useDateStore } from '@/store/date'
-import { getAllGroupSchedule } from '@/service/scheduleController'
-import { usegroupScheduleStore } from '@/store/groupSchedule'
+import { ref, onMounted, watch } from 'vue'
 
-const groupScheduleStore = usegroupScheduleStore()
+const props = defineProps({
+  events: {
+    type: Array
+  },
+  fetchData: {
+    type: Function,
+    required: true
+  },
+  deleteEvent: {
+    type: Function,
+    required: true
+  }
+})
+
 const dateStore = useDateStore()
-const calendar = ref(null)
 
 // 달력선택시 해당 주로 변경
 watch(
@@ -52,28 +55,16 @@ watch(
     value.value = [newDate]
   }
 )
+const calendar = ref(null)
+const weekday = ref([0, 1, 2, 3, 4, 5, 6])
+const value = ref([new Date()])
 
+//v-calendar event
 function handleViewMode(event) {
   view_mode.value = event
 }
-
-//socket
-const userStore = useAuthStore()
-const route = useRoute()
-const headers = {
-  Authorization: `Bearer ${userStore.accessToken}`,
-  groupCode: route.params.groupCode
-}
-const client = inject('websocketClient')
-
-const weekday = ref([0, 1, 2, 3, 4, 5, 6])
-const colors = ['#8487e2', '#5f64d9', '#656ae6']
 const view_mode = ref('month')
-const value = ref([new Date()])
-const events = ref([])
-const { startDay, endDay } = getWeekDays()
 
-//v-calendar event
 function next() {
   if (view_mode.value === 'month') {
     const newDate = new Date(value.value)
@@ -102,89 +93,9 @@ function toToday() {
   value.value = new Date()
 }
 
-function rnd(a, b) {
-  return Math.floor((b - a + 1) * Math.random()) + a
-}
-
-// API
-function getWeekDays() {
-  const today = new Date(value.value)
-  let startOfWeek, endOfWeek
-
-  if (view_mode.value === 'week') {
-    const dayOfWeek = today.getDay()
-    startOfWeek = new Date(today)
-    startOfWeek.setDate(today.getDate() - dayOfWeek)
-    endOfWeek = new Date(startOfWeek)
-    endOfWeek.setDate(startOfWeek.getDate() + 6)
-  } else {
-    startOfWeek = new Date(today.getFullYear(), today.getMonth(), 1)
-    endOfWeek = new Date(today.getFullYear(), today.getMonth() + 1, 0)
-  }
-
-  return {
-    startDay: startOfWeek.toISOString().split('T')[0],
-    endDay: endOfWeek.toISOString().split('T')[0]
-  }
-}
-
-// websocket handler
-function deleteEvent(index) {
-  const data = {
-    scheduleId: index
-  }
-  client.value.send(`/pub/schedule/delete/${headers.groupCode}`, {}, JSON.stringify(data))
-}
-
-function handleWebSocketMessage(message) {
-  const data = JSON.parse(message.body).data
-  if (data.action === 'CREATE') {
-    events.value.push({
-      id: data.id,
-      title: data.title,
-      start: new Date(new Date(data.scheduleDate).setHours(data.startTime)),
-      end: new Date(new Date(data.scheduleDate).setHours(data.endTime)),
-      color: colors[rnd(0, colors.length - 1)],
-      timed: true
-    })
-  } else if (data.action === 'DELETE') {
-    events.value = events.value.filter((event) => event.id !== data.id)
-  }
-}
-
-async function fetchData() {
-  client.value.connect(headers, () => {
-    client.value.subscribe(`/sub/schedule/${headers.groupCode}`, handleWebSocketMessage)
-  })
-
-  const schedules = await scheduleStore().getGroupScheduleOfWeek(
-    route.params.groupCode,
-    startDay,
-    endDay
-  )
-
-  schedules.data.data.forEach((schedule) => {
-    events.value.push({
-      id: schedule.id,
-      title: schedule.title,
-      start: new Date(new Date(schedule.scheduleDate).setHours(schedule.startTime)),
-      end: new Date(new Date(schedule.scheduleDate).setHours(schedule.endTime)),
-      color: colors[rnd(0, colors.length - 1)],
-      timed: true
-    })
-  })
-}
-
-async function fetchGroupSchedule() {
-  const groupCode = useRoute().params.groupCode
-  groupScheduleStore.groupSchedules = await getAllGroupSchedule(groupCode)
-}
-
-onMounted(() => {
-  //
-  fetchData()
-  // 그룹 스케줄 전부 가져온다
-  fetchGroupSchedule()
+onMounted(async () => {
+  // 스케줄 -> 이벤트 카드
+  await props.fetchData()
 })
 </script>
 
@@ -192,45 +103,7 @@ onMounted(() => {
 .calendar {
   background-color: #fdfdfd;
 }
-.event-card {
-  padding: 4px 8px;
-  height: 100px;
-  border: 1px solid #656ae6;
-  border-radius: 8px;
-  color: #656ae6;
-  position: relative;
-  font-size: 12px;
-  margin-bottom: 4px;
-}
-.card-header {
-  display: flex;
-  justify-content: end;
-  gap: 10px;
-}
-
-.event-time {
-  display: block;
-  margin-bottom: 4px;
-}
-
-.event-title {
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 :deep(.bg-primary) {
   background-color: #656ae6 !important;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 10px 0 2px;
-  .today {
-    margin: 0 10px;
-  }
 }
 </style>

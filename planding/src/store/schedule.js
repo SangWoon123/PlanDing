@@ -7,12 +7,14 @@ export const scheduleStore = defineStore('schedule', {
     content: '',
     scheduleDate: '',
     startTime: '',
-    endTime: ''
+    endTime: '',
+    schedules: []
   }),
   actions: {
     async createPost(postInfo) {
       try {
-        await authInstance('/api/v1/schedule').post('', postInfo)
+        const response=await authInstance('/api/v1/schedule').post('', postInfo)
+        this.schedules.push(response.data.data)
       } catch (error) {
         console.error('Error creating schedule:', error)
       }
