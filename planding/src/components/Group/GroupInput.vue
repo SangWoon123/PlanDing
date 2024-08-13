@@ -13,10 +13,10 @@
 </template>
 
 <script setup>
-import SubTitle from '../ListPage/MainContent/atom/SubTitle.vue'
-import { ref,watch } from 'vue'
+import SubTitle from '../MainContent/atom/SubTitle.vue';
+import { ref } from 'vue'
 
-const props = defineProps({
+defineProps({
   text: String,
   ySize: String
 })
@@ -28,7 +28,6 @@ const emit = defineEmits()
 const updateValue = () => {
   emit('update:modelValue', inputValue.value)
 }
-
 </script>
 
 <style lang="scss" scoped>
@@ -38,6 +37,7 @@ const updateValue = () => {
   border: 1px solid #bebebe;
   border-radius: 4px;
   padding: 0px 0px 0px 10px;
+  font-size: 14px;
 }
 input::placeholder {
   color: #303494;

@@ -13,11 +13,46 @@ export const postInvitation = async (groupCode, userCode) => {
   }
 }
 
-export const getInvitation=async()=>{
+export const getInvitation = async () => {
+  try {
+    const response = await authInstance('/api/v1/invitation').get('')
+    return response.data.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export const accpetInvitation=async(groupCode,inviteCode)=>{
   try{
-    const response=await authInstance('/api/v1/invitation').get('')
+    const response=await authInstance('/api/v1/invitation').get(`/accept/${groupCode}/${inviteCode}`)
     return response.data.data
   }catch(error){
+    console.error(error)
+  }
+}
+
+export const declineInvitation=async(inviteCode)=>{
+  try{
+    const response=await authInstance('/api/v1/invitation').delete(`/decline/${inviteCode}`)
+    return response.data.data
+  }catch(error){
+    console.error(error)
+  }
+}
+
+export const getScheduleAlarm = async () => {
+  try {
+    const response = await authInstance('/api/v1/notification').get('/schedules')
+    return response.data.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export const deleteAlarm = async (scheduleId) => {
+  try {
+    await authInstance('/api/v1/notification').delete(`/${scheduleId}`)
+  } catch (error) {
     console.error(error)
   }
 }

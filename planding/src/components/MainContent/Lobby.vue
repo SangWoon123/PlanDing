@@ -44,8 +44,8 @@
     <!-- Group 모달 -->
     <GroupCreate v-if="groupModal" @closeModal="groupModal = false" @close="groupModal = false" />
     <!-- 알람 -->
-    <GlobalAlert :data="data" @remove="removeAlert" />
-    <InviteAlert :data="invite" @remove="removeAlert" />
+    <ScheduleAlarm :data="data" @remove="removeAlert" />
+    <InviteAlarm :data="invite" @remove="removeAlert" />
   </section>
 </template>
 
@@ -53,7 +53,7 @@
 import { onMounted, ref, provide } from 'vue'
 import { userGroupsStore } from '@/store/group'
 import SubTitle from './atom/SubTitle.vue'
-import GroupRoom from './GroupRoom.vue'
+import GroupRoom from './group/GroupRoom.vue'
 import HeaderSection from './right/HeaderSection.vue'
 import DatePicker from './right/DateSelect.vue'
 import Footer from './right/Footer.vue'
@@ -65,8 +65,8 @@ import MouseOver from '@/components/SmallTools/MouseOver.vue'
 import LeftComponent from './left/LeftComponent.vue'
 import { useAlarmStore } from '@/store/alarm'
 import { sseConnect } from '@/service/sseService'
-import GlobalAlert from '../../SmallTools/ScheduleAlarm.vue'
-import InviteAlert from '../../SmallTools/InviteAlarm.vue'
+import ScheduleAlarm from '../Notification/schedule/ScheduleAlarm.vue'
+import InviteAlarm from '../Notification/invite/InviteAlarm.vue'
 
 const createdAt = '1시간전'
 
@@ -140,10 +140,13 @@ const connect = ref(null)
 function initializeConnection() {
   if (connect.value) {
     connect.value.close()
+    return
   }
   connect.value = sseConnect()
 
   connect.value.onopen = () => {
+    provide('sse', connect)
+
     console.log('Connection to server opened.')
   }
 
@@ -164,7 +167,6 @@ function initializeConnection() {
     setTimeout(initializeConnection, 3000)
   }
 }
-provide('sse', connect)
 
 function removeAlert(item) {
   data.value = data.value.filter((alert) => alert.id !== item.scheduleId)

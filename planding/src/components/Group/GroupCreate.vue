@@ -1,30 +1,31 @@
 <template>
-  <div class="modal-overlay">
-    <div class="box">
-      <GroupMakeTitle />
-      <Thumbnail @update-thumbnail="handleThumbnail" />
+  <Modal @close="closeModal">
+    <GroupMakeTitle />
+    <Thumbnail @update-thumbnail="handleThumbnail" />
 
-      <GroupInput v-model="title" text="그룹 이름" ySize="40px" />
-      <GroupInput v-model="desc" text="그룹 설명" ySize="80px" />
+    <GroupInput v-model="title" text="그룹 이름" ySize="40px" />
+    <GroupInput v-model="desc" text="그룹 설명" ySize="80px" />
 
-      <div class="btn">
-        <v-btn class="group-btn" @click="createGroup(title, desc)" text="그룹 만들기" flat />
-        <v-btn class="cancle-btn" @click="closeModal" text="취소" flat />
-      </div>
+    <div class="btn">
+      <v-btn class="group-btn" @click="createGroup(title, desc)" text="그룹 만들기" flat />
+      <v-btn class="cancle-btn" @click="closeModal" text="취소" flat />
     </div>
-  </div>
+  </Modal>
 </template>
 
 <script setup>
+import Modal from '../SmallTools/Modal.vue'
 import GroupInput from './GroupInput.vue'
 import GroupMakeTitle from './GroupMakeHeader.vue'
 import Thumbnail from './Thumbnail.vue'
 import { ref } from 'vue'
-import { authInstance } from '@/api/authAxios'
+import { authInstance } from '@/service/authAxios'
+import { userGroupsStore } from '@/store/group'
 
 const title = ref('')
 const desc = ref('')
 const thumbnail = ref(null)
+const groupStore = userGroupsStore()
 
 const emit = defineEmits()
 
@@ -46,41 +47,17 @@ const createGroup = async () => {
   formData.append('request', new Blob([JSON.stringify(groupRequest)], { type: 'application/json' }))
   formData.append('thumbnail', thumbnail.value)
 
-  const instance = authInstance('/api/v1/group')
-
-  const response = await instance.post('', formData, {
+  const response = await authInstance('/api/v1/group').post('', formData, {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
   })
-  console.log(response)
+  groupStore.groups.push(response.data.data)
   emit('close')
 }
 </script>
 
 <style lang="scss" scoped>
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.3);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 440px;
-  height: 700px;
-  background-color: white;
-  border-radius: 4px;
-  position: relative;
-}
 .btn {
   position: absolute;
   bottom: 40px;

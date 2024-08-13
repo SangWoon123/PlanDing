@@ -7,19 +7,22 @@
     <div class="right">
       <HeaderSection :invitations="alarmStore.invites" :schedules="alarmStore.scheduleAlarm" />
       <DateSelect />
-      <ScheduleCreate />
+
+      <ScheduleCreate :create="create" />
     </div>
   </section>
 </template>
 
 <script setup>
-import DateSelect from '../../ListPage/MainContent/right/DateSelect.vue'
-import HeaderSection from '../../ListPage/MainContent/right/HeaderSection.vue'
-import ScheduleCreate from '../../ListPage/Information/ScheduleCreate.vue'
-import LeftComponent from '../../ListPage/MainContent/left/LeftComponent.vue'
+import DateSelect from './right/DateSelect.vue'
+import HeaderSection from './right/HeaderSection.vue'
+import ScheduleCreate from '../ListPage/Information/ScheduleCreate.vue'
+import LeftComponent from './left/LeftComponent.vue'
 import { useAlarmStore } from '@/store/alarm'
 import { userGroupsStore } from '@/store/group'
-
+defineProps({
+  create: Function
+})
 const groupStore = userGroupsStore()
 const alarmStore = useAlarmStore()
 </script>

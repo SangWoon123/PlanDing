@@ -17,18 +17,22 @@
 
     <!-- 카드 디자인 -->
     <EventCardDetail
-      :group="detailGroup(event.id)"
       :event="event"
       @deleteEvent="deleteEvent"
       @closeModal="closeModal"
-    />
+    >
+      <template #attendance>
+        <ScheduleAttendance :groupId="event.id" />
+      </template>
+    </EventCardDetail>
     <!-- 카드 디자인 -->
   </v-menu>
 </template>
 
 <script setup>
-import Avatar from '../SmallTools/Avatar.vue'
-import EventCardDetail from './EventCardDetail.vue'
+import ScheduleAttendance from '../../Group/ScheduleAttendance.vue'
+import Avatar from '../../SmallTools/Avatar.vue'
+import EventCardDetail from '../EventCardDetail.vue'
 import { defineEmits, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { usegroupScheduleStore } from '@/store/groupSchedule'
@@ -48,11 +52,6 @@ async function handleCardClick(event) {
   if (isMenuActive.value) {
     await groupScheduleStore.groupScheduleInfo(groupCode, event.id)
   }
-}
-
-function detailGroup(scheduleId) {
-  const schedule = groupScheduleStore.groupSchedules.find((schedule) => schedule.id === scheduleId)
-  return schedule
 }
 
 const computedAvatarSize = (scheduleId) => {

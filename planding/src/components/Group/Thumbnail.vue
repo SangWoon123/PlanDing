@@ -21,7 +21,7 @@
 
 <script setup>
 import { ref, defineEmits } from 'vue'
-import SubTitle from '../ListPage/MainContent/atom/SubTitle.vue'
+import SubTitle from '../MainContent/atom/SubTitle.vue';
 import baseImage from '../../assets/load.png'
 
 const imageSrc = ref(null)

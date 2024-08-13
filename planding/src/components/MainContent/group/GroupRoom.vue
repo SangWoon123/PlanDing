@@ -1,17 +1,18 @@
 <template>
-  <div class="group-box">
-    <figure>
-      <img :src="img" :class="{ 'img-false': !img }" alt="" />
-    </figure>
-    <div class="group-title">
-      <span>{{ title }}</span>
-      <span style="color: #bebebe; font-size: 13px">{{ createdAt }}</span>
+    <div class="group-box">
+      <figure>
+        <img :src="img" :class="{ 'img-false': !img }" alt="" />
+      </figure>
+      <div class="group-title">
+        <span>{{ title }}</span>
+
+        <span style="color: #bebebe; font-size: 13px">{{ createdAt }}</span>
+      </div>
     </div>
-  </div>
 </template>
 
 <script setup>
-const props = defineProps({
+defineProps({
   title: String,
   createdAt: String,
   img: String
@@ -26,6 +27,7 @@ const props = defineProps({
   height: 178px;
   padding: 12px;
   margin: 0 12px 0 0;
+  box-sizing: border-box;
   cursor: pointer;
   transition:
     transform 0.3s ease,
@@ -53,8 +55,9 @@ const props = defineProps({
   .group-title {
     margin-top: 10px;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
+    margin: 10px;
   }
 }
 </style>

@@ -1,18 +1,22 @@
 import { createWebHistory, createRouter } from 'vue-router'
 import LoginPage from './components/LoginComponent/LoginPage.vue'
 import LoginProgress from './components/LoginComponent/LoginProgress.vue'
-import MainPage from './components/ListPage/MainContent/MainPage.vue'
-import GroupPage from './components/ListPage/Information/GroupPage.vue'
-import PersonalPage from './components/Personal/PersonalPage.vue'
+import Lobby from './components/MainContent/Lobby.vue'
+import MainContent from './components/MainContent/MainContent.vue'
+import GroupPage from './components/MainContent/group/GroupPage.vue'
+import PersonalPage from './components/MainContent/personal/PersonalPage.vue'
+import NotificationTemplate from './components/Notification/ScheduleNotification.vue'
 
 const router = new createRouter({
   history: createWebHistory(),
   routes: [
     { path: '/', component: LoginPage },
     { path: '/LoginProgressPage', component: LoginProgress },
-    { path: '/planding', component: MainPage },
-    { path: '/group/:groupCode', component: GroupPage },
-    { path: '/personal', component: PersonalPage }
+    { path: '/planding', component: Lobby },
+    { path: '/group/:groupCode', name: 'test', component: GroupPage },
+    { path: '/personal', component: PersonalPage },
+    { path: '/modal', component: NotificationTemplate },
+    { path: '/test', component: MainContent }
   ]
 })
 

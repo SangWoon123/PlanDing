@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <form class="box" @submit.prevent="createSchedule">
+    <form class="box" @submit.prevent="create(postInfo)">
       <input v-model="title" type="text" placeholder="제목을 입력해주세요." />
       <textarea
         v-model="content"
@@ -27,38 +27,25 @@
 </template>
 
 <script setup>
-import { ref, inject } from 'vue'
+import { ref, computed } from 'vue'
 import DateInput from './DateInput.vue'
 import TimePicker from './TimePicker.vue'
-import { useRoute } from 'vue-router'
-import { useAuthStore } from '@/store/store'
-
-const userStore = useAuthStore()
-const route = useRoute()
-
+defineProps({
+  create: Function
+})
 const title = ref(null)
 const content = ref(null)
 const startTime = ref(null)
 const endTime = ref(null)
 const scheduleDate = ref(null)
 
-const client = inject('websocketClient')
-
-const headers = {
-  Authorization: `Bearer ${userStore.accessToken}`,
-  groupCode: route.params.groupCode
-}
-
-const createSchedule = () => {
-  const postInfo = {
-    title: title.value,
-    content: content.value,
-    startTime: startTime.value,
-    endTime: endTime.value,
-    scheduleDate: scheduleDate.value
-  }
-  client.value.send(`/pub/schedule/create/${headers.groupCode}`, {}, JSON.stringify(postInfo))
-}
+const postInfo = computed(() => ({
+  title: title.value,
+  content: content.value,
+  startTime: startTime.value,
+  endTime: endTime.value,
+  scheduleDate: scheduleDate.value
+}))
 </script>
 
 <style lang="scss" scoped>

@@ -42,7 +42,7 @@ function alertText(item) {
   const time = item.time
   const message = item.message
   const groupName = item.groupName ? `그룹: ${item.groupName}` : ''
-
+  console.log(type)
   if (type === 'GROUP_SCHEDULE') {
     return `${time}시에 ${groupName}에서 스케줄 알림: ${message}`
   } else if (type === 'PERSONAL_SCHEDULE') {
@@ -73,7 +73,7 @@ function handleClose(item) {
 
 .alert-content {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   justify-content: center;
   height: 100%;
 }

@@ -11,6 +11,7 @@
         :content="badgeContent"
       ></v-badge>
     </div>
+    
   </div>
 </template>
 

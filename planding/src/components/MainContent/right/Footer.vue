@@ -3,11 +3,13 @@
     <div class="header">
       <SubTitle text="오늘의 일정" />
     </div>
+    <div v-if="!props.data" class="text">{{ notSchedule() }}</div>
     <div class="schedule-container">
-      <ol v-for="i in 10" :key="i">
-        <SimpleSchedule />
+      <ol v-for="(item, index) in data" :key="index">
+        <SimpleSchedule :schedule="item" />
       </ol>
     </div>
+
     <v-btn class="more-btn" flat>더 보기 </v-btn>
   </div>
 </template>
@@ -15,6 +17,15 @@
 <script setup>
 import SubTitle from '../atom/SubTitle.vue'
 import SimpleSchedule from './SimpleSchedule.vue'
+
+const props = defineProps({
+  data: Array
+})
+function notSchedule() {
+  if (!props.data) {
+    return '오늘 일정이 없습니다.'
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -37,6 +48,13 @@ import SimpleSchedule from './SimpleSchedule.vue'
     display: flex;
     justify-content: center;
     margin: 2px 0 15px;
+  }
+  .text {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    font-size: 14px;
+    color: lightgrey;
   }
 
   .schedule-container {

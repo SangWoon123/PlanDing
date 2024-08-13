@@ -2,7 +2,6 @@
   <v-date-picker
     v-model="date"
     show-adjacent-months
-    :weekday-format="getDay"
     hide-header
     bg-color="#F6F6F8"
     class="date-picker"
@@ -16,12 +15,6 @@ import { ref, watch } from 'vue'
 import { useDateStore } from '@/store/date'
 const date = ref(new Date())
 const dateStore = useDateStore()
-
-function getDay(date) {
-  const daysOfWeek = ['1', '2', '화', '수', '목', '금', '토']
-  let i = new Date(date).getDay(date)
-  return daysOfWeek[i]
-}
 
 watch(date, (newVal) => {
   dateStore.setDate(newVal)

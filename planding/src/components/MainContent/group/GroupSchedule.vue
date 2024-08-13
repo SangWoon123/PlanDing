@@ -1,9 +1,14 @@
 <template>
-  <CustomCalendar :fetchData="fetchData" :deleteEvent="deleteEvent" :events="events" />
+  <CustomCalendar :fetchData="fetchData" :events="events">
+    <template #group="{ event }">
+      <EventCard :event="event" @deleteEvent="deleteEvent" />
+    </template>
+  </CustomCalendar>
 </template>
 
 <script setup>
 import CustomCalendar from '@/components/Calendar/CustomCalendar.vue'
+import EventCard from '@/components/Calendar/group/GroupEventCard.vue'
 import { ref, inject } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/store/store'
@@ -54,7 +59,6 @@ function getWeekDays() {
 const groupScheduleStore = usegroupScheduleStore()
 
 function deleteEvent(index) {
-  console.log(index)
   const data = {
     scheduleId: index
   }

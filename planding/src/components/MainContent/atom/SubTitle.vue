@@ -3,14 +3,14 @@
 </template>
 
 <script setup>
-const props = defineProps({
+defineProps({
   text: String
 })
 </script>
 
 <style lang="scss" scoped>
 .sub-title {
-  font-size: 22px;
+  font-size: 20px;
   font-family: 'Pretendard-Regular';
   font-weight: 700;
   color: #303494;

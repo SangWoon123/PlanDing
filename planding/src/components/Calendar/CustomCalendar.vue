@@ -20,7 +20,8 @@
       </template>
 
       <template v-slot:event="{ event }">
-        <EventCard :event="event" :userStore="userStore" @deleteEvent="deleteEvent" />
+        <slot name="group" :event="event"></slot>
+        <slot name="personal" :event="event"></slot>
       </template>
     </v-calendar>
   </v-sheet>
@@ -29,7 +30,6 @@
 <script setup>
 import { useDateStore } from '@/store/date'
 import CalendarNavigation from './CalendarNavigation.vue'
-import EventCard from './EventCard.vue'
 import { ref, onMounted, watch } from 'vue'
 
 const props = defineProps({

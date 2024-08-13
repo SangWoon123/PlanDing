@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import SubTitle from '../ListPage/MainContent/atom/SubTitle.vue'
+import SubTitle from '../MainContent/atom/SubTitle.vue';
 </script>
 
 <style lang="scss" scoped>

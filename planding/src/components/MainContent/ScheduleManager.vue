@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import UsersProfile from '../../ListPage/Information/UsersProfile.vue'
+import UsersProfile from '../ListPage/Information/UsersProfile.vue';
 </script>
 
 <style lang="scss" scoped>

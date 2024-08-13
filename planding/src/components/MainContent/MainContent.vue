@@ -1,7 +1,6 @@
 <template>
   <LeftRightContainer>
-    <ScheduleManager>
-     </ScheduleManager>
+    <ScheduleManager> </ScheduleManager>
   </LeftRightContainer>
 </template>
 

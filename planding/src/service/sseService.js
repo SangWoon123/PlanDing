@@ -11,7 +11,7 @@ export const sseConnect = () => {
       'Content-Type': 'text/event-stream',
       Authorization: `Bearer ${accessToken}`
     },
-    heartbeatTimeout: 30000,
+    heartbeatTimeout: 300000,
     withCredentials: true
   })
   return connect
