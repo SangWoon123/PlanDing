@@ -36,7 +36,7 @@
           </v-btn>
         </template>
 
-        <v-card width="450" height="600" rounded="xl" class="notification-card pa-2">
+        <v-card width="450" height="600" rounded="lg" class="notification-card pa-2">
           <v-card-title class="notification-title">
             <span>Notifications</span>
             <v-btn variant="text" color="#656ae6">모두읽음</v-btn>
@@ -44,13 +44,7 @@
 
           <div class="d-flex justify-center">
             <div class="custom-tabs">
-              <v-tabs
-                v-model="tab"
-                height="30px"
-                density="compact"
-                fixed-tabs
-                slider-color="#656ae6"
-              >
+              <v-tabs v-model="tab" height="30px" slider-color="#656ae6">
                 <v-tab value="one" class="custom-tab">
                   <span>전체</span>
                   <v-badge
@@ -112,8 +106,8 @@
 
           <v-divider color="#9DA2FF" length="100%" thickness="2px"></v-divider>
 
-          <div class="d-flex justify-center mt-5">
-            <v-btn width="200px" color="#656ae6" text="close" />
+          <div class="d-flex justify-end ma-5">
+            <v-btn color="#656ae6" text="close" />
           </div>
         </v-card>
       </v-menu>
@@ -245,11 +239,14 @@ const logout = () => {
   }
 }
 .custom-tabs {
+  display: flex;
+  justify-content: center;
+  width: 95%;
   background-color: #f6f6f8;
   border-radius: 6px;
   padding: 5px;
   margin-bottom: 16px;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 0px 1px rgba(0, 0, 0, 0.1);
 }
 :deep(.v-tab-item--selected) {
   background-color: white;
