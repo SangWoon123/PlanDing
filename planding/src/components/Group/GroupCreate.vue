@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import Modal from '../SmallTools/Modal.vue'
+import Modal from '../ui/Modal.vue'
 import GroupInput from './GroupInput.vue'
 import GroupMakeTitle from './GroupMakeHeader.vue'
 import Thumbnail from './Thumbnail.vue'

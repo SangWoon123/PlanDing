@@ -31,7 +31,7 @@
 <script setup>
 import ChatPage from './ChatPage.vue'
 import InvitePage from './InvitePage.vue'
-import CustomFab from '@/components/SmallTools/CustomFab.vue';
+import CustomFab from '@/components/ui/CustomFab.vue';
 import { ref } from 'vue'
 const active = ref(true)
 

@@ -7,7 +7,7 @@
 <script setup>
 import router from '@/router'
 import { useAuthStore } from '@/store/store'
-import Progress from '../Progress.vue'
+import Progress from '../ui/Progress.vue'
 const queryParams = new URLSearchParams(location.search)
 const accessToken = queryParams.get('accessToken')
 

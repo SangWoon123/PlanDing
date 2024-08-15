@@ -30,8 +30,8 @@
 </template>
 
 <script setup>
+import Avatar from '@/components/ui/Avatar.vue'
 import ScheduleAttendance from '../../Group/ScheduleAttendance.vue'
-import Avatar from '../../SmallTools/Avatar.vue'
 import EventCardDetail from '../EventCardDetail.vue'
 import { defineEmits, ref } from 'vue'
 import { useRoute } from 'vue-router'

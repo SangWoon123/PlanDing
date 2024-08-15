@@ -29,13 +29,13 @@
 </template>
 
 <script setup>
-import DeleteAlert from '../SmallTools/DeleteAlert.vue'
+import DeleteAlert from '../ui/DeleteAlert.vue'
 import { ref } from 'vue'
 
 const deleteAlert = ref(false)
 defineProps({
   event: Object,
-  isVisible: Boolean,
+  isVisible: Boolean
 })
 const emit = defineEmits(['deleteEvent', 'closeModal'])
 

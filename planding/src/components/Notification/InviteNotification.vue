@@ -54,13 +54,13 @@
 </template>
 
 <script setup>
+import DeleteButton from '../ui/DeleteButton.vue'
 import { useAlarmStore } from '@/store/alarm'
-import DeleteButton from '../SmallTools/DeleteButton.vue'
 import { timeAgo } from '@/service/tools/date'
-import { userGroupsStore } from '@/store/group';
+import { userGroupsStore } from '@/store/group'
 
 const alarmStore = useAlarmStore()
-const groupStore=userGroupsStore()
+const groupStore = userGroupsStore()
 async function acceptInvite() {
   alarmStore.invites = alarmStore.invites.filter(
     (invitation) => invitation.inviteCode !== props.data.inviteCode
@@ -69,12 +69,13 @@ async function acceptInvite() {
 
   //TODO: 초대수락이후 그룹 갱신 API 개선
   await groupStore.getGroups()
-
 }
 
-async function declineInvite(){
+async function declineInvite() {
   alarmStore.invites = alarmStore.invites.filter(
-    (invitation) => invitation.inviteCode !== props.data.inviteCode && invitation.createdAt !== props.data.createdAt
+    (invitation) =>
+      invitation.inviteCode !== props.data.inviteCode &&
+      invitation.createdAt !== props.data.createdAt
   )
   await alarmStore.declineInvite(props.data.inviteCode)
 }

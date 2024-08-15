@@ -54,7 +54,7 @@
 
 <script setup>
 import { useAlarmStore } from '@/store/alarm'
-import DeleteButton from '../SmallTools/DeleteButton.vue'
+import DeleteButton from '../ui/DeleteButton.vue';
 import { timeAgo } from '@/service/tools/date'
 
 const alarmStore = useAlarmStore()
