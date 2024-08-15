@@ -3,20 +3,20 @@
   <v-hover v-slot:default="{ isHovering, props }">
     <div v-bind="props" class="mouse-over-container">
       <slot :isHovering="isHovering"></slot>
+
       <v-expand-transition>
         <div v-if="isHovering" class="hover-buttons">
-          <div class="hover-btn">
-            <v-btn
-              @click="handleFavorite(groupCode)"
-              :icon="bookmark ? 'mdi-bookmark' : 'mdi-bookmark-outline'"
-            />
-            <v-btn
-              @click="handleAlarm(groupCode)"
-              :icon="alarm ? 'mdi-bell-ring' : 'mdi-bell-ring-outline'"
-            />
-
-            <v-btn @click="handlerDeleteGroup(groupCode)" icon="mdi-trash-can-outline" />
-          </div>
+          <v-btn
+            class="btn"
+            @click="handleFavorite(groupCode)"
+            :icon="bookmark ? 'mdi-bookmark' : 'mdi-bookmark-outline'"
+          />
+          <v-btn
+            class="btn"
+            @click="handleAlarm(groupCode)"
+            :icon="alarm ? 'mdi-bell-ring' : 'mdi-bell-ring-outline'"
+          />
+          <v-btn class="btn" @click="handlerDeleteGroup(groupCode)" icon="mdi-trash-can-outline" />
         </div>
       </v-expand-transition>
     </div>
@@ -91,6 +91,10 @@ watch(
 <style lang="scss" scoped>
 .mouse-over-container {
   position: relative;
+}
+.btn {
+  width: 35px;
+  height: 35px;
 }
 .hover-buttons {
   position: absolute;
