@@ -1,6 +1,10 @@
 <template>
   <section id="container">
-    <LeftComponent :favoriteGroup="groupStore.favoriteGroups" />
+    <RightComponent :invitations="alarmStore.invites" :schedules="alarmStore.scheduleAlarm">
+      <template #footer>
+        <Footer :data="todaySchedule" />
+      </template>
+    </RightComponent>
     <div class="mid">
       <div class="inner">
         <h1 class="title">PlanDing</h1>
@@ -36,11 +40,9 @@
         </div>
       </div>
     </div>
-    <div class="right">
-      <HeaderSection :invitations="alarmStore.invites" :schedules="alarmStore.scheduleAlarm" />
-      <DatePicker />
-      <Footer :data="todaySchedule" />
-    </div>
+
+    <LeftComponent :favoriteGroup="groupStore.favoriteGroups" />
+
     <!-- Group 모달 -->
     <GroupCreate v-if="groupModal" @closeModal="groupModal = false" @close="groupModal = false" />
     <!-- 알람 -->
@@ -51,11 +53,11 @@
 
 <script setup>
 import { onMounted, ref, provide } from 'vue'
+import RightComponent from './right/\bRightComponent.vue'
+
 import { userGroupsStore } from '@/store/group'
 import SubTitle from './atom/SubTitle.vue'
 import GroupRoom from './group/GroupRoom.vue'
-import HeaderSection from './right/HeaderSection.vue'
-import DatePicker from './right/DateSelect.vue'
 import Footer from './right/Footer.vue'
 import GroupCreate from '@/components/Group/GroupCreate.vue'
 import Progress from '@/components/ui/Progress.vue'
@@ -181,16 +183,6 @@ function removeAlert(item) {
   height: 100vh;
   background-color: #f5f5fd;
 
-  .left {
-    background-color: #ffffff;
-    width: 88px;
-    height: 781px;
-    border-radius: 16px;
-    box-shadow:
-      0 4px 6px -1px rgb(0 0 0 / 0.1),
-      0 2px 4px -2px rgb(0 0 0 / 0.1);
-  }
-
   .mid {
     background-color: #ffffff;
     display: flex;
@@ -240,15 +232,6 @@ function removeAlert(item) {
         scrollbar-color: #8487e2 #f6f6f8;
       }
     }
-  }
-  .right {
-    background-color: #ffffff;
-    width: 320px;
-    height: 860px;
-    border-radius: 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
   }
 }
 </style>
