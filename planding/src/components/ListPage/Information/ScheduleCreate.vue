@@ -1,9 +1,9 @@
 <template>
   <div class="container">
     <form class="box" @submit.prevent="create(postInfo)">
-      <input v-model="title" type="text" placeholder="제목을 입력해주세요." />
+      <input v-model.trim="title" type="text" placeholder="제목을 입력해주세요." />
       <textarea
-        v-model="content"
+        v-model.trim="content"
         style="height: 90px"
         type="text"
         placeholder="일정 내용을 입력해주세요."
