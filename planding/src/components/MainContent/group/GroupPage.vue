@@ -8,6 +8,12 @@
       </div>
       <div class="title-user">
         <UsersProfile :users="groupInfo.users" />
+        <AddButton @click="toggleFavorite">
+          <template #icon>
+            <v-icon icon="mdi-star" :color="isBookmarked ? 'yellow':'white'"/>
+          </template>
+          <template #text> Favorite </template>
+        </AddButton>
       </div>
       <template v-slot:calendar>
         <GroupSchedule />
@@ -23,10 +29,11 @@
 import GroupSchedule from './GroupSchedule.vue'
 import LeftRightContainer from '../LeftRightContainer.vue'
 import ScheduleManager from '../ScheduleManager.vue'
+import AddButton from '@/components/ui/AddButton.vue'
 
 import UsersProfile from '../../ListPage/Information/UsersProfile.vue'
 import SubMenu from '../dialog/SubMenu.vue'
-import { onMounted, onUnmounted, provide, ref } from 'vue'
+import { computed, onMounted, onUnmounted, provide, ref } from 'vue'
 import { userGroupsStore } from '@/store/group'
 import { useRoute } from 'vue-router'
 import { Stomp } from '@stomp/stompjs'
@@ -37,6 +44,14 @@ const route = useRoute()
 const groupInfo = ref({})
 const userStore = useAuthStore()
 
+async function toggleFavorite() {
+  await groupStore.toggleFavorite(route.params.groupCode)
+}
+
+const isBookmarked = computed(() => {
+  return groupStore.favoriteGroups.some((group) => group.code === route.params.groupCode)
+})
+
 const create = (postInfo) => {
   const headers = {
     Authorization: `Bearer ${userStore.accessToken}`,
@@ -45,7 +60,6 @@ const create = (postInfo) => {
   client.value.send(`/pub/schedule/create/${headers.groupCode}`, {}, JSON.stringify(postInfo))
 }
 
-
 const fetchGroupInfo = async () => {
   const groupCode = route.params.groupCode
   await groupStore.getGroupInfo(groupCode)
@@ -53,7 +67,7 @@ const fetchGroupInfo = async () => {
 }
 
 const fetchInvite = async () => {
-  groupStore.getFavoriteGroups()
+  await groupStore.getFavoriteGroups()
 }
 
 //웹소켓 연결

@@ -26,7 +26,6 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { userGroupsStore } from '@/store/group'
-import { postFavorite, deleteFavorite } from '@/service/favoriteController'
 import { updateGroupAlarmSetting } from '@/service/alarmController'
 
 const props = defineProps({
@@ -39,27 +38,7 @@ const bookmark = ref(props.bookmark)
 const alarm = ref(true)
 
 async function handleFavorite(groupCode) {
-  try {
-    if (bookmark.value) {
-      const response = await deleteFavorite(groupCode)
-      groupStore.favoriteGroups = groupStore.favoriteGroups.filter(
-        (group) => group.code !== groupCode
-      )
-      console.log('delete', response)
-    } else {
-      const response = await postFavorite(groupCode)
-      const group = groupStore.groups.find((group) => group.code === groupCode)
-      if (group) {
-        groupStore.favoriteGroups.push(group)
-      }
-
-      console.log('post', response)
-    }
-  } catch (error) {
-    console.log(error)
-  } finally {
-    bookmark.value = !bookmark.value
-  }
+  await groupStore.toggleFavorite(groupCode)
 }
 
 function handlerDeleteGroup(groupCode) {

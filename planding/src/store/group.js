@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { authInstance } from '@/service/authAxios'
 import { deleteGroup, leaveGroup } from '@/service/groupController'
 import { getFavoriteList } from '@/service/favoriteController'
+import { postFavorite, deleteFavorite } from '@/service/favoriteController'
 
 export const userGroupsStore = defineStore('group', {
   state: () => ({
@@ -46,6 +47,23 @@ export const userGroupsStore = defineStore('group', {
     async getFavoriteGroups() {
       const response = await getFavoriteList()
       this.favoriteGroups = response
+    },
+    async toggleFavorite(groupCode) {
+      const bookmarkIndex = this.favoriteGroups.findIndex((group) => group.code === groupCode)
+      try {
+        if (bookmarkIndex !== -1) {
+          await deleteFavorite(groupCode)
+          this.favoriteGroups = this.favoriteGroups.filter((group) => group.code !== groupCode)
+        } else {
+          await postFavorite(groupCode)
+          const group = this.groups.find((group) => group.code === groupCode)
+          if (group) {
+            this.favoriteGroups.push(group)
+          }
+        }
+      } catch (error) {
+        console.log(error)
+      }
     },
     getGroup() {
       return this.selectGroup
