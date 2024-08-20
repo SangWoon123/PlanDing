@@ -3,7 +3,7 @@
     <LeftComponent :favoriteGroup="groupStore.favoriteGroups" />
     <div class="mid">
       <div class="inner">
-        <div class="title">PlanDing</div>
+        <h1 class="title">PlanDing</h1>
 
         <SubTitle text="My Plan" />
         <div class="plan-content" :style="{ height: height }">
@@ -214,7 +214,7 @@ function removeAlert(item) {
       .title {
         font-family: 'Pretendard-Regular';
         font-weight: 900;
-        font-size: 30px;
+        font-size: 35px;
         display: flex;
         align-items: center;
         width: 100%;

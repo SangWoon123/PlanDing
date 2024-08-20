@@ -1,12 +1,12 @@
 <template>
   <div :class="isPast ? 'past-box' : 'box'">
     <div class="header">
-      <span>
+      <span class="time">
         {{ `${formatTime(schedule.startTime)} - ${formatTime(schedule.endTime)}` }}
       </span>
       <span class="group" v-if="schedule.groupName"></span>
     </div>
-    <span>{{ schedule.title }}</span>
+    <span class="title">{{ schedule.title }}</span>
   </div>
 </template>
 
@@ -30,9 +30,9 @@ const isPast = computed(() => {
 .past-box {
   width: 240px;
   height: 68px;
-  border: 1px solid orange;
-  border-radius: 4px;
-  color: orange;
+  border: 1px solid #a2a3b6;
+  border-radius: 10px;
+  background-color: #E7E7FE;
   font-size: 12px;
   display: flex;
   flex-direction: column;
@@ -43,7 +43,7 @@ const isPast = computed(() => {
   width: 240px;
   height: 68px;
   border: 1px solid #a2a3b6;
-  border-radius: 4px;
+  border-radius: 10px;
   color: #8e8fa5;
   font-size: 12px;
   display: flex;
@@ -54,12 +54,22 @@ const isPast = computed(() => {
   .header {
     display: flex;
     justify-content: space-between;
+    span {
+      color: black;
+    }
   }
   .group {
-    width: 15px;
-    height: 15px;
+    width: 10px;
+    height: 10px;
     border-radius: 999px;
-    background-color: #6065d4;
+    background-color: green;
   }
+}
+.time {
+  color: #4f4f4f;
+}
+.title {
+  font-size: 16px;
+  font-weight: 900;
 }
 </style>

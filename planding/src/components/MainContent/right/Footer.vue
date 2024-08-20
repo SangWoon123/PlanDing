@@ -36,7 +36,7 @@ function notSchedule() {
   width: 280px;
   height: 350px;
   border: 2px solid #c0c2f5;
-  border-radius: 4px;
+  border-radius: 20px;
   position: relative;
   .header {
     width: 100%;
