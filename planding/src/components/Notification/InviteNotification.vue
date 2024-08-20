@@ -30,7 +30,7 @@
                   </span>
                   <DeleteButton
                     class="pa-1 ma-2"
-                    style="background-color: #8487e2"
+                    style="background-color: #C565E6"
                     @click="alarmStore.deleteSchedule(data.id)"
                     flat
                     v-if="isHovering"

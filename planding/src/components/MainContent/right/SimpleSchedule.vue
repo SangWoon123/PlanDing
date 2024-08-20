@@ -31,8 +31,8 @@ const isPast = computed(() => {
   width: 240px;
   height: 68px;
   border: 1px solid #a2a3b6;
-  border-radius: 10px;
-  background-color: #E7E7FE;
+  border-radius: 4px;
+  background-color: #e7e7fe;
   font-size: 12px;
   display: flex;
   flex-direction: column;
@@ -43,7 +43,7 @@ const isPast = computed(() => {
   width: 240px;
   height: 68px;
   border: 1px solid #a2a3b6;
-  border-radius: 10px;
+  border-radius: 4px;
   color: #8e8fa5;
   font-size: 12px;
   display: flex;
@@ -62,7 +62,7 @@ const isPast = computed(() => {
     width: 10px;
     height: 10px;
     border-radius: 999px;
-    background-color: green;
+    background-color: #c565e6;
   }
 }
 .time {

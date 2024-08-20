@@ -17,10 +17,7 @@
     </div>
 
     <div class="two">
-      <v-btn density="compact" stacked variant="plain" class="icon-btn">
-        <v-icon>mdi-account-edit-outline</v-icon>
-      </v-btn>
-      <v-menu location="end" offset-y :close-on-content-click="false">
+      <v-menu location="top" offset-y :close-on-content-click="false">
         <template v-slot:activator="{ props }">
           <v-btn
             v-bind="props"
@@ -36,11 +33,11 @@
           </v-btn>
         </template>
 
-        <v-card width="450" height="600" rounded="lg" class="notification-card pa-2">
-          <v-card-title class="notification-title">
-            <span>Notifications</span>
-            <v-btn variant="text" color="#656ae6">모두읽음</v-btn>
-          </v-card-title>
+        <v-card width="380" height="630" rounded="xl" class="pa-2">
+          <template v-slot:title>
+            <span class="font-weight-black">알림</span>
+          </template>
+          <v-divider color="black" length="100%" thickness="1px" class="mb-3" />
 
           <div class="d-flex justify-center">
             <div class="custom-tabs">
@@ -93,7 +90,7 @@
             </div>
           </div>
 
-          <v-virtual-scroll :items="currentItems" height="400px" item-height="48">
+          <v-virtual-scroll :items="currentItems" height="450px" item-height="48">
             <template v-slot:default="{ item }">
               <InviteNotification v-if="tab === 'two'" :data="item" />
               <ScheduleNotification
@@ -104,13 +101,16 @@
             </template>
           </v-virtual-scroll>
 
-          <v-divider color="#9DA2FF" length="100%" thickness="2px"></v-divider>
+          <v-divider color="black" length="500px" thickness="1px" />
 
-          <div class="d-flex justify-end ma-5">
-            <v-btn color="#656ae6" text="close" />
+          <div class="d-flex justify-end ma-2">
+            <v-btn color="#656ae6" text="모두읽음" variant="text" />
           </div>
         </v-card>
       </v-menu>
+      <v-btn density="compact" stacked variant="plain" class="icon-btn">
+        <v-icon>mdi-account-edit-outline</v-icon>
+      </v-btn>
     </div>
   </section>
 </template>
@@ -219,20 +219,6 @@ const logout = () => {
       min-width: auto;
     }
   }
-
-  .notification-card {
-    display: flex;
-    flex-direction: column;
-    padding: 16px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-
-  .notification-title {
-    font-weight: 600;
-    font-size: 18px;
-    margin-bottom: 16px;
-  }
-
   .custom-tab {
     font-size: 14px;
     font-weight: 500;
@@ -241,12 +227,12 @@ const logout = () => {
 .custom-tabs {
   display: flex;
   justify-content: center;
-  width: 95%;
+  width: 100%;
   background-color: #f6f6f8;
   border-radius: 6px;
   padding: 5px;
   margin-bottom: 16px;
-  box-shadow: inset 0 0px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 0px 1px rgba(0, 0, 0, 0.5);
 }
 :deep(.v-tab-item--selected) {
   background-color: white;

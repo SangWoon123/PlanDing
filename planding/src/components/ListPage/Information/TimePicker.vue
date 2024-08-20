@@ -5,6 +5,7 @@
     :label="label"
     :items="item"
     variant="outlined"
+    :menu-props="{ maxHeight: 'none' }"
   ></v-select>
 </template>
 

@@ -12,10 +12,10 @@
       <div class="time-picker">
         <TimePicker
           @update:time="startTime = $event"
-          :label="'startTime'"
+          :label="'부터'"
           style="margin-right: 5px"
         />
-        <TimePicker @update:time="endTime = $event" :label="'endTime'" style="margin-left: 5px" />
+        <TimePicker @update:time="endTime = $event" :label="'까지'" style="margin-left: 5px" />
       </div>
       <DateInput @updated:date="scheduleDate = $event" />
       <div class="btn">
@@ -67,6 +67,7 @@ const postInfo = computed(() => ({
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 5px;
   }
 }
 input,
@@ -85,6 +86,7 @@ textarea {
   display: flex;
   justify-content: space-between;
   .new {
+    font-size: 16px;
     background-color: #656ae6;
     color: white;
     width: 114px;
@@ -92,6 +94,7 @@ textarea {
     border-radius: 4px;
   }
   .cancle {
+    font-size: 16px;
     border: 1px solid #656ae6;
     color: #656ae6;
     width: 114px;

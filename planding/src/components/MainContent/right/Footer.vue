@@ -36,7 +36,7 @@ function notSchedule() {
   width: 280px;
   height: 350px;
   border: 2px solid #c0c2f5;
-  border-radius: 20px;
+  border-radius: 4px;
   position: relative;
   .header {
     width: 100%;
@@ -47,7 +47,7 @@ function notSchedule() {
   ol {
     display: flex;
     justify-content: center;
-    margin: 2px 0 15px;
+    margin: 0px 0 10px;
   }
   .text {
     display: flex;
@@ -61,7 +61,7 @@ function notSchedule() {
     width: 100%;
     height: 220px;
     overflow-y: auto;
-    padding: 10px;
+    padding: 2px;
     box-sizing: border-box;
 
     scrollbar-width: thin; /* Firefox */
