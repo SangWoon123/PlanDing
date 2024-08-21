@@ -1,5 +1,5 @@
 <template>
-  <button class="button">
+  <button class="button" :class="{ 'button-style': type }">
     <div class="content">
       <slot name="icon"></slot>
       <slot name="text"></slot>
@@ -7,7 +7,11 @@
   </button>
 </template>
 
-<script setup></script>
+<script setup>
+defineProps({
+  type: Boolean
+})
+</script>
 
 <style lang="scss" scoped>
 .button {
@@ -18,8 +22,16 @@
   .content {
     display: flex;
     justify-content: center;
-    font-size: 15px;
-    gap:2px;
+    font-size: 16px;
+    gap: 6px;
   }
+}
+.button-style {
+  width: 113px;
+  height: 40px;
+  background-color: #f0f0fd;
+  border-radius: 8px;
+  color: #474aa1;
+  font-weight: 900;
 }
 </style>

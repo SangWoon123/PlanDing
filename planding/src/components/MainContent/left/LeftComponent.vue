@@ -56,7 +56,7 @@ watch(
     width: 40px;
     height: 40px;
     border-radius: 999px;
-    border: 2px solid #5f64d9;
+    border: 3px solid #363BC9;
   }
 }
 </style>
