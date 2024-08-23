@@ -1,15 +1,18 @@
 <template>
   <button class="button" :class="{ 'button-style': type }">
     <div class="content">
-      <slot name="icon"></slot>
-      <slot name="text"></slot>
+      <v-icon :icon="icon" :color="color" />
+      <span>{{ text }}</span>
     </div>
   </button>
 </template>
 
 <script setup>
 defineProps({
-  type: Boolean
+  type: Boolean,
+  icon: String,
+  text: String,
+  color: String
 })
 </script>
 
