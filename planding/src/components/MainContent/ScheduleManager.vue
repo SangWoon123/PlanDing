@@ -5,7 +5,6 @@
         <slot></slot>
         <UsersProfile />
       </div>
-
       <div class="calendar">
         <slot name="calendar"></slot>
       </div>
