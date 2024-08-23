@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import DeleteAlert from '../ui/DeleteAlert.vue'
+import DeleteAlert from '../ui/DeleteWarning.vue'
 import { ref } from 'vue'
 
 const deleteAlert = ref(false)
