@@ -1,25 +1,23 @@
 <template>
   <BaseCard id="section" style="max-width: 848px; height: 575px">
-    <header id="header">
+    <header class="schedule-header">
       <h2 style="color: #3e418c">일정 생성하기</h2>
       <p>생성할 일정의 정보를 입력해 주세요</p>
       <v-divider></v-divider>
     </header>
 
-    <body>
-      <v-row>
-        <v-col>
-          <TodoFrom />
-        </v-col>
-        <v-col>
-          <PeopleSetting />
-        </v-col>
-      </v-row>
-      <div class="submit-button">
-        <v-btn rounded="lg" color="#656AE6">일정 만들기</v-btn>
-        <v-btn rounded="lg" color="#656AE6" variant="outlined">취소</v-btn>
+    <div class="schedule-body">
+      <div class="schedule-form">
+        <TodoFrom />
       </div>
-    </body>
+      <div class="schedule-people">
+        <PeopleSetting />
+      </div>
+    </div>
+    <div class="schedule-actions">
+      <v-btn rounded="lg" color="#656AE6">일정 만들기</v-btn>
+      <v-btn rounded="lg" color="#656AE6" variant="outlined">취소</v-btn>
+    </div>
   </BaseCard>
 </template>
 
@@ -32,7 +30,7 @@ import PeopleSetting from './PeopleSetting.vue'
 <style lang="scss" scoped>
 #section {
   padding: 20px;
-  #header {
+  .schedule-header {
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -41,8 +39,16 @@ import PeopleSetting from './PeopleSetting.vue'
       font-size: 12px;
     }
   }
+  .schedule-body {
+    display: flex;
+    gap: 20px;
+    .schedule-form,
+    .schedule-people {
+      flex: 1;
+    }
+  }
 }
-.submit-button {
+.schedule-actions {
   display: flex;
   justify-content: end;
   gap: 10px;
