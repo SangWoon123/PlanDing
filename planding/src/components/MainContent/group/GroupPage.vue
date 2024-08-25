@@ -1,29 +1,21 @@
 <template>
   <LeftRightContainer :create="create">
     <ScheduleManager>
+      <img src="/planding_icon.png" />
       <div class="group-page__header">
-        <div class="header-title">
-          <img :src="groupInfo.thumbnailUrl" alt="Group Thumbnail" />
-          {{ groupInfo.name }}
-          <span style="font-size: 20px; margin: 5px; align-self: flex-end">스케줄</span>
-        </div>
-        <div class="group-page-header">
-          <UsersProfile :users="groupInfo.users" />
-          <!-- 플래너 -->
-          <AddButton
-            @click="loadPlanner"
-            :icon="plannerIcon"
-            :text="!isPlannerLoaded ? 'Planner' : 'Schedule'"
-          />
-          <!-- 즐겨찾기 -->
-          <AddButton
-            @click="toggleFavorite"
-            icon="mdi-star"
-            text="Favorite"
-            :color="bookmarkColor"
-          />
+        <div class="group-page__header-tab">
+          <SwitchTab type="schedule" @click="loadPlanner(false)" />
+          <SwitchTab type="planner" @click="loadPlanner(true)" />
         </div>
       </div>
+      <AddButton
+        style="align-self: center"
+        @click="toggleFavorite"
+        icon="mdi-star"
+        text="즐겨찾기"
+        type
+        :color="bookmarkColor"
+      />
 
       <!-- 스케줄 -->
       <template #calendar>
@@ -42,14 +34,13 @@ import PlannerPage from '@/components/planner/PlannerPage.vue'
 import LeftRightContainer from '../LeftRightContainer.vue'
 import ScheduleManager from '../ScheduleManager.vue'
 import AddButton from '@/components/ui/AddButton.vue'
-
-import UsersProfile from '../../ListPage/Information/UsersProfile.vue'
 import SubMenu from '../dialog/SubMenu.vue'
 import { computed, onMounted, onUnmounted, provide, ref } from 'vue'
 import { userGroupsStore } from '@/store/group'
 import { onBeforeRouteUpdate, useRoute } from 'vue-router'
 import { Stomp } from '@stomp/stompjs'
 import { useAuthStore } from '@/store/store'
+import SwitchTab from '@/components/ui/SwitchTab.vue'
 
 const groupStore = userGroupsStore()
 const route = useRoute()
@@ -59,8 +50,8 @@ const userStore = useAuthStore()
 const groupCode = ref(route.params.groupCode)
 const isPlannerLoaded = ref(false) // Planner 버튼 상태 관리
 
-const loadPlanner = () => {
-  isPlannerLoaded.value = !isPlannerLoaded.value
+const loadPlanner = (event) => {
+  isPlannerLoaded.value = event
 }
 
 async function toggleFavorite() {
@@ -123,28 +114,20 @@ onBeforeRouteUpdate((to, from, next) => {
 
 <style lang="scss" scoped>
 img {
-  width: 60px;
-  height: 60px;
-  border-radius: 9999px;
-  border: 2px solid #5f64d9;
-  margin-right: 20px;
-}
-.group-page {
-  &__header {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-  }
+  width: 70px;
+  height: 70px;
 }
 
-.group-page-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.header-title {
-  display: flex;
-  align-items: center;
+.group-page {
+  &__header {
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    &-tab {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
 }
 
 .speed-dialog {
