@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import SubTitle from '../atom/SubTitle.vue'
+import SubTitle from '../../ui/SubTitle.vue'
 import SimpleSchedule from './SimpleSchedule.vue'
 
 const props = defineProps({

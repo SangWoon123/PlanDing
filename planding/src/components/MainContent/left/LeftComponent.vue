@@ -1,16 +1,23 @@
 <template>
   <div class="left">
-    <div v-for="favorite in favoriteGroup" :key="favorite.groupCode" class="mt-4">
-      <img
-        @click="navigaitorPage(favorite)"
-        :src="favorite.thumbnailPath ? favorite.thumbnailPath : '/planding.png'"
-        alt=""
-      />
+    <div class="left__bar">
+      <div v-for="favorite in favoriteGroup" :key="favorite.groupCode" class="mt-4">
+        <img
+          @click="navigaitorPage(favorite)"
+          :src="favorite.thumbnailPath ? favorite.thumbnailPath : '/planding.png'"
+          alt=""
+        />
+      </div>
+    </div>
+    <div class="speed-dialog">
+      <SubMenu />
+      <v-icon>mdi-chat-processing-outline</v-icon>
     </div>
   </div>
 </template>
 
 <script setup>
+import SubMenu from '../dialog/SubMenu.vue'
 import router from '@/router'
 import { watch } from 'vue'
 import { useRoute } from 'vue-router'
@@ -42,21 +49,28 @@ watch(
 
 <style lang="scss" scoped>
 .left {
-  background-color: #ffffff;
-  width: 88px;
-  height: 781px;
-  border-radius: 16px;
-  box-shadow:
-    0 4px 6px -1px rgb(0 0 0 / 0.1),
-    0 2px 4px -2px rgb(0 0 0 / 0.1);
   display: flex;
+  height: 861px;
   flex-direction: column;
   align-items: center;
-  img {
-    width: 40px;
-    height: 40px;
-    border-radius: 999px;
-    border: 3px solid #363BC9;
+  &__bar {
+    background-color: #ffffff;
+    width: 88px;
+    height: 765px;
+    border-radius: 16px;
+    box-shadow:
+      0 4px 6px -1px rgb(0 0 0 / 0.1),
+      0 2px 4px -2px rgb(0 0 0 / 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    img {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      border: 3px solid #363bc9;
+    }
   }
+
 }
 </style>

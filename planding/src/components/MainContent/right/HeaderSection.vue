@@ -13,7 +13,7 @@
         </div>
       </figure>
 
-      <button @click="logout" class="logout" type="button">로그아웃</button>
+      <router-link to="/" @click="logout" class="logout" type="button">로그아웃</router-link>
     </div>
 
     <div class="two">
@@ -166,6 +166,7 @@ onMounted(async () => {
 })
 
 const logout = () => {
+  console.log('zzz')
   if (connect.value) {
     connect.value.close()
     connect.value = null
@@ -206,6 +207,9 @@ const logout = () => {
       margin-left: 8px;
     }
     .logout {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       width: 89px;
       height: 34px;
       color: white;

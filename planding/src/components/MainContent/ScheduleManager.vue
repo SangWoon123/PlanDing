@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import UsersProfile from '../ListPage/Information/UsersProfile.vue';
+import UsersProfile from '../ListPage/Information/UsersProfile.vue'
 </script>
 
 <style lang="scss" scoped>
@@ -23,7 +23,7 @@ import UsersProfile from '../ListPage/Information/UsersProfile.vue';
   justify-content: center;
   align-items: center;
   width: 1012px;
-  height: 848px;
+  height: 861px;
   border-radius: 16px;
   margin: 0 15px 0 15px;
   box-shadow:
@@ -31,31 +31,30 @@ import UsersProfile from '../ListPage/Information/UsersProfile.vue';
     0 2px 4px -2px rgb(0 0 0 / 0.1);
   .calendar {
     overflow-y: auto;
-    border-radius: 4px;
+    border-radius: 0 0 8px 8px;
     scrollbar-color: #8487e2 #f6f6f8;
   }
   .inner {
     background-color: #e8e9fa;
     width: 96.04%;
-    height: 808px;
-    border: 1px solid #5f64d9;
-    border-radius: 4px;
+    // height: 841px;
+    height: 97%;
+    border: 2px solid #d9d9d9;
+    border-radius: 8px;
     display: flex;
     flex-direction: column;
     .title {
-      font-family: 'Pretendard-Regular';
       font-weight: 900;
       font-size: 30px;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      align-items: flex-end;
       width: 100%;
       height: 80px;
-      background-color: #8487e2;
+      background-color: #ffffff;
       color: #ffffff;
-      padding: 12px;
-      border-radius: 4px 4px 0 0;
+      border-radius: 8px 8px 0 0;
       position: relative;
+      border-bottom: 1px solid #A2A3B6;
     }
   }
 }

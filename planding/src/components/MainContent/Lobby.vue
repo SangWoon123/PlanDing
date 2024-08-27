@@ -56,7 +56,7 @@ import { onMounted, ref, provide } from 'vue'
 import RightComponent from './right/\bRightComponent.vue'
 
 import { userGroupsStore } from '@/store/group'
-import SubTitle from './atom/SubTitle.vue'
+import SubTitle from '../ui/SubTitle.vue'
 import GroupRoom from './group/GroupRoom.vue'
 import Footer from './right/Footer.vue'
 import GroupCreate from '@/components/Group/GroupCreate.vue'
@@ -156,11 +156,13 @@ function initializeConnection() {
     const parsedData = JSON.parse(e.data)
     if (parsedData.notificationType === 'INVITE') {
       alarmStore.invites.push(parsedData)
+      invite.value.push(parsedData)
     } else if (
       parsedData.notificationType === 'PERSONAL_SCHEDULE' ||
       parsedData.notificationType === 'GROUP_SCHEDULE'
     ) {
       alarmStore.scheduleAlarm.push(parsedData)
+      data.value.push(parsedData)
     }
   }
 
@@ -189,7 +191,7 @@ function removeAlert(item) {
     justify-content: center;
     align-items: center;
     width: 1012px;
-    height: 848px;
+    height: 861px;
     border-radius: 16px;
     margin: 0 15px 0 15px;
     box-shadow:
@@ -198,7 +200,8 @@ function removeAlert(item) {
     .inner {
       background-color: #e8e9fa;
       width: 96.04%;
-      height: 808px;
+      // height: 808px;
+      height: 97%;
       border: 1px solid #5f64d9;
       border-radius: 4px;
       display: flex;

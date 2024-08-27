@@ -18,14 +18,12 @@
       />
 
       <!-- 스케줄 -->
-      <template #calendar>
+      <template #calendar >
         <component :is="isPlannerLoaded ? PlannerPage : GroupSchedule" />
       </template>
     </ScheduleManager>
   </LeftRightContainer>
-  <span class="speed-dialog">
-    <SubMenu />
-  </span>
+
 </template>
 
 <script setup>
@@ -34,7 +32,6 @@ import PlannerPage from '@/components/planner/PlannerPage.vue'
 import LeftRightContainer from '../LeftRightContainer.vue'
 import ScheduleManager from '../ScheduleManager.vue'
 import AddButton from '@/components/ui/AddButton.vue'
-import SubMenu from '../dialog/SubMenu.vue'
 import { computed, onMounted, onUnmounted, provide, ref } from 'vue'
 import { userGroupsStore } from '@/store/group'
 import { onBeforeRouteUpdate, useRoute } from 'vue-router'
@@ -130,10 +127,4 @@ img {
   }
 }
 
-.speed-dialog {
-  position: absolute;
-  bottom: 60px;
-  right: 20px;
-  z-index: 1000;
-}
 </style>

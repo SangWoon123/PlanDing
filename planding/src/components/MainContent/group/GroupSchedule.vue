@@ -1,5 +1,5 @@
 <template>
-  <CustomCalendar :fetchData="fetchData" :events="events">
+  <CustomCalendar :group="true" :fetchData="fetchData" :events="events">
     <template #group="{ event }">
       <EventCard :event="event" @deleteEvent="deleteEvent" />
     </template>
@@ -19,9 +19,10 @@ import { usegroupScheduleStore } from '@/store/groupSchedule'
 const route = useRoute()
 const client = inject('websocketClient')
 const userStore = useAuthStore()
+const groupCode = ref(route.params.groupCode)
 const headers = {
   Authorization: `Bearer ${userStore.accessToken}`,
-  groupCode: route.params.groupCode
+  groupCode: groupCode.value
 }
 
 const value = ref([new Date()])
@@ -87,13 +88,9 @@ async function fetchData() {
   })
 
   // 그룹 스케줄 전부 가져온다
-  await groupScheduleStore.getAllGroupSchedule(route.params.groupCode)
+  await groupScheduleStore.getAllGroupSchedule(groupCode.value)
 
-  const schedules = await scheduleStore().getGroupScheduleOfWeek(
-    route.params.groupCode,
-    startDay,
-    endDay
-  )
+  const schedules = await scheduleStore().getGroupScheduleOfWeek(groupCode.value, startDay, endDay)
 
   schedules.data.data.forEach((schedule) => {
     events.value.push({
