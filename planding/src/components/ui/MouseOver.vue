@@ -16,7 +16,6 @@
             @click="handleAlarm(groupCode)"
             :icon="alarm ? 'mdi-bell-ring' : 'mdi-bell-ring-outline'"
           />
-          <v-btn class="btn" @click="handlerDeleteGroup(groupCode)" icon="mdi-trash-can-outline" />
         </div>
       </v-expand-transition>
     </div>
@@ -39,10 +38,6 @@ const alarm = ref(true)
 
 async function handleFavorite(groupCode) {
   await groupStore.toggleFavorite(groupCode)
-}
-
-function handlerDeleteGroup(groupCode) {
-  groupStore.leaveGroup(groupCode)
 }
 
 function handleAlarm(groupCode) {
