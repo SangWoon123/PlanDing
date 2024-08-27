@@ -8,9 +8,9 @@
 
 <style lang="scss" scoped>
 .container {
-  width: 80px;
-  height: 80px;
-  border-radius: 40%;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
   background-color: #656ae6;
 }
 </style>

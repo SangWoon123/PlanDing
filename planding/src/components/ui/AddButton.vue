@@ -1,7 +1,7 @@
 <template>
   <button class="button" :class="{ 'button-style': type }">
     <div class="content">
-      <v-icon :icon="icon" :color="color" />
+      <v-icon v-if="icon" :icon="icon" :color="color" />
       <span>{{ text }}</span>
     </div>
   </button>
