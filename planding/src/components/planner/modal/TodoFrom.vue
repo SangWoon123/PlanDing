@@ -1,8 +1,17 @@
 <template>
   <div>
+    <div class="todo-select">
+      <label>스케줄 선택</label>
+      <v-select class="select" items="[,0,]" variant="outlined"></v-select>
+    </div>
     <div class="todo-name">
       <label>일정이름</label>
-      <input type="text" class="todo-name__input" placeholder="이름을 지어주세요" />
+      <input
+        type="text"
+        class="todo-name__input"
+        placeholder="이름을 지어주세요"
+        v-model="formData.name"
+      />
     </div>
 
     <div class="todo-state">
@@ -65,8 +74,23 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import StateButton from './StateButton.vue'
+
+defineEmits(['submit-form'])
+
+const formData = reactive({
+  schedule: '',
+  name: '',
+  state: '',
+  scheduleDate: '',
+  deadlineTime: '',
+  details: ''
+})
+
+// function submitForm() {
+//   emit('submit-form', { ...formData })
+// }
 
 const selectedState = ref('')
 function selectState(state) {
@@ -75,13 +99,22 @@ function selectState(state) {
 </script>
 
 <style lang="scss" scoped>
+:deep(.v-field__overlay) {
+  height: 40px !important;
+  border-radius: 8px !important;
+}
 .textarea {
   width: 392px;
-  height: 120px;
+  height: 100px;
   border: 1px solid #a2a3b6;
   border-radius: 8px;
   padding: 10px;
   resize: none;
+}
+.todo-select {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 .todo-name {
   display: flex;
@@ -93,6 +126,7 @@ function selectState(state) {
     padding: 10px;
     resize: none;
     margin-bottom: 20px;
+    height: 40px;
   }
 }
 

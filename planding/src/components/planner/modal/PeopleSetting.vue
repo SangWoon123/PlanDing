@@ -5,19 +5,26 @@
     <div class="people-setting__header">
       <div class="people-setting__profile-group">
         <div
-          v-for="(i, index) in 5"
-          :key="index"
+          v-for="(user, index) in selectedUsers"
+          :key="user.userCode"
           class="people-setting__profile"
           :style="{ left: `${index * 20}px` }"
-        ></div>
+        >
+          <img :src="user.profileImageUrl || '/planding_icon.png'" />
+        </div>
       </div>
-      <span class="people-setting__text">총 3명</span>
+      <span class="people-setting__text">총 {{ selectedUsers.length }}명</span>
     </div>
     <v-divider class="mb-5"></v-divider>
 
-    <v-virtual-scroll height="310px" :items="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]" item-height="100">
+    <v-virtual-scroll height="418px" :items="groupStore.selectGroup.users" item-height="100">
       <template #default="{ item, index }">
-        <PlannerItem :key="index" />
+        <PlannerItem
+          :key="index"
+          :userInfo="item"
+          :isSelected="isSelected(item)"
+          @toggle-user="handleToggleUser"
+        />
       </template>
     </v-virtual-scroll>
   </div>
@@ -25,6 +32,23 @@
 
 <script setup>
 import PlannerItem from './PeopleItem.vue'
+import { userGroupsStore } from '@/store/group'
+import { ref } from 'vue'
+
+const selectedUsers = ref([])
+const groupStore = userGroupsStore()
+
+function handleToggleUser({ userInfo, isAdded }) {
+  if (isAdded) {
+    selectedUsers.value.push(userInfo)
+  } else {
+    selectedUsers.value = selectedUsers.value.filter((user) => user.userCode !== userInfo.userCode)
+  }
+}
+
+function isSelected(user) {
+  return selectedUsers.value.some((selectedUser) => selectedUser.userCode === user.userCode)
+}
 </script>
 
 <style lang="scss" scoped>
