@@ -3,11 +3,11 @@
     type="button"
     class="content"
     :style="{
-      backgroundColor: color ? '#474AA1' : '#f6f6f8',
-      color: color ? '#f6f6f8' : '#474AA1'
+      backgroundColor: active ? '#474AA1' : '#f6f6f8',
+      color: active ? '#f6f6f8' : '#474AA1'
     }"
   >
-    <v-icon>{{ color ? 'mdi-calendar-blank-outline' : 'mdi-menu' }}</v-icon>
+    <v-icon>{{ icon }}</v-icon>
     <span>{{ text }}</span>
   </button>
 </template>
@@ -18,10 +18,12 @@ import { computed } from 'vue'
 const props = defineProps({
   type: {
     type: String
-  }
+  },
+  active: Boolean
 })
-const color = computed(() => props.type === 'schedule')
-const text = computed(() => (props.type === 'schedule' ? '스케줄' : '플래너'))
+
+const text = computed(() => (props.type === 'planner' ? '플래너' : '스케줄'))
+const icon = computed(() => (props.type === 'planner' ? 'mdi-menu' : 'mdi-calendar-blank-outline'))
 </script>
 
 <style lang="scss" scoped>

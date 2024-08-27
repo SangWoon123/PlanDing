@@ -4,8 +4,16 @@
       <img src="/planding_icon.png" />
       <div class="group-page__header">
         <div class="group-page__header-tab">
-          <SwitchTab type="schedule" @click="loadPlanner(false)" />
-          <SwitchTab type="planner" @click="loadPlanner(true)" />
+          <SwitchTab
+            :active="currentTab === 'schedule'"
+            type="schedule"
+            @click="setActiveTab('schedule')"
+          />
+          <SwitchTab
+            :active="currentTab === 'planner'"
+            type="planner"
+            @click="setActiveTab('planner')"
+          />
         </div>
       </div>
       <AddButton
@@ -18,12 +26,11 @@
       />
 
       <!-- 스케줄 -->
-      <template #calendar >
+      <template #calendar>
         <component :is="isPlannerLoaded ? PlannerPage : GroupSchedule" />
       </template>
     </ScheduleManager>
   </LeftRightContainer>
-
 </template>
 
 <script setup>
@@ -43,12 +50,17 @@ const groupStore = userGroupsStore()
 const route = useRoute()
 const groupInfo = ref({})
 const userStore = useAuthStore()
-
 const groupCode = ref(route.params.groupCode)
 const isPlannerLoaded = ref(false) // Planner 버튼 상태 관리
+const currentTab = ref('schedule')
 
 const loadPlanner = (event) => {
   isPlannerLoaded.value = event
+}
+
+function setActiveTab(tab) {
+  currentTab.value = tab
+  loadPlanner(tab === 'planner')
 }
 
 async function toggleFavorite() {
@@ -126,5 +138,4 @@ img {
     }
   }
 }
-
 </style>
