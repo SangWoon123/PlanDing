@@ -50,10 +50,11 @@ export const userGroupsStore = defineStore('group', {
     },
     async toggleFavorite(groupCode) {
       const bookmarkIndex = this.favoriteGroups.findIndex((group) => group.code === groupCode)
+      console.log(bookmarkIndex)
       try {
         if (bookmarkIndex !== -1) {
           await deleteFavorite(groupCode)
-          this.favoriteGroups = this.favoriteGroups.filter((group) => group.code !== groupCode)
+          this.favoriteGroups.splice(bookmarkIndex, 1)
         } else {
           await postFavorite(groupCode)
           const group = this.groups.find((group) => group.code === groupCode)

@@ -21,11 +21,6 @@
 
     <!-- 그룹모드만 -->
     <div v-if="group" class="modal-container">
-      <!-- <div v-if="inviteShow" style="width: 30%; display: flex; align-items: center">
-        <v-text-field variant="outlined" density="compact"> </v-text-field>
-        <v-btn color="#656ae6" @click="createInvite">invite</v-btn>
-      </div> -->
-      <!-- <AddButton type @click="inviteShow = !inviteShow" icon="mdi-account-plus" text="Invite" /> -->
       <GroupFunctionModal class="modal-content" />
     </div>
   </v-toolbar>
@@ -33,10 +28,7 @@
 
 <script setup>
 import GroupFunctionModal from '@/components/ui/modal/GroupFunctionModal.vue'
-import AddButton from '../ui/AddButton.vue'
 import { ref } from 'vue'
-import { useRoute } from 'vue-router'
-import { useAlarmStore } from '@/store/alarm'
 defineProps({
   group: Boolean,
   title: String,
@@ -44,18 +36,6 @@ defineProps({
 })
 const viewMode = ref('month')
 const emit = defineEmits(['prev', 'next', 'toToday', 'updateViewMode'])
-const inviteShow = ref(false)
-
-const alarmStore = useAlarmStore()
-const inputUserCode = ref('')
-const route = useRoute()
-
-async function createInvite() {
-  const groupCode = route.params.groupCode
-  const userCode = inputUserCode.value
-
-  alarmStore.postInvitation(groupCode, userCode)
-}
 
 function prev() {
   emit('prev')

@@ -71,8 +71,6 @@ const bookmarkColor = computed(() => (isBookmarked.value ? 'yellow' : 'white'))
 const isBookmarked = computed(() => {
   return groupStore.favoriteGroups.some((group) => group.code === groupCode.value)
 })
-const plannerIcon = computed(() => (isPlannerLoaded.value ? 'mdi-calendar' : 'mdi-apple'))
-
 const create = (postInfo) => {
   const headers = {
     Authorization: `Bearer ${userStore.accessToken}`,
