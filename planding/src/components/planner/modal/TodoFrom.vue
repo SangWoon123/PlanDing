@@ -2,7 +2,14 @@
   <div>
     <div class="todo-select">
       <label>스케줄 선택</label>
-      <v-select class="select" items="[,0,]" variant="outlined"></v-select>
+      <v-select
+        class="select"
+        :items="groupScheduleStore.groupSchedules"
+        v-model="formData.scheduleId"
+        variant="outlined"
+        item-value="id"
+        item-text="name"
+      ></v-select>
     </div>
     <div class="todo-name">
       <label>일정이름</label>
@@ -10,7 +17,7 @@
         type="text"
         class="todo-name__input"
         placeholder="이름을 지어주세요"
-        v-model="formData.name"
+        v-model="formData.title"
       />
     </div>
 
@@ -18,25 +25,13 @@
       <label>일정 상태</label>
       <div class="todo-state__group">
         <StateButton
-          label="진행중"
-          state="progress"
-          color="#f3ee6e"
-          :selectedState="selectedState"
-          @select="selectState"
-        />
-        <StateButton
-          state="complete"
-          label="완료"
-          color="#87df79"
-          :selectedState="selectedState"
-          @select="selectState"
-        />
-        <StateButton
-          state="pending"
-          label="진행대기"
-          color="#e15a5a"
-          :selectedState="selectedState"
-          @select="selectState"
+          v-for="(button, index) in stateButtons"
+          :key="index"
+          :status="button.status"
+          :label="button.label"
+          :color="button.color"
+          @select="updateStatus"
+          :selectedState="formData.status"
         />
       </div>
     </div>
@@ -54,6 +49,7 @@
           variant="outlined"
           show-adjacent-months
           append-inner-icon="mdi-calendar-check"
+          v-model="formData.scheduleDate"
         />
         <v-select
           max-width="120px"
@@ -61,41 +57,85 @@
           variant="outlined"
           density="compact"
           append-inner-icon="mdi-clock-time-four-outline"
-          :items="['01', '02', '03', '04', '05', '06']"
+          :items="timeOptions"
+          v-model="formData.deadlineTime"
         ></v-select>
       </div>
     </div>
 
     <div class="detail">
       <label for="">일정 상세 설명</label>
-      <textarea placeholder="설명을 적어주세요" class="textarea" />
+      <textarea placeholder="설명을 적어주세요" class="textarea" v-model="formData.content" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, watch } from 'vue'
+import { usePlannerStore } from '@/store/planner'
+import { usegroupScheduleStore } from '@/store/groupSchedule'
 import StateButton from './StateButton.vue'
 
-defineEmits(['submit-form'])
+const plannerStore = usePlannerStore()
+const groupScheduleStore = usegroupScheduleStore()
+const formData = reactive(plannerStore.formData)
 
-const formData = reactive({
-  schedule: '',
-  name: '',
-  state: '',
-  scheduleDate: '',
-  deadlineTime: '',
-  details: ''
-})
+const stateButtons = [
+  { status: 'IN_PROGRESS', label: '진행중', color: '#f3ee6e' },
+  { status: 'DONE', label: '완료', color: '#87df79' },
+  { status: 'TODO', label: '진행대기', color: '#e15a5a' }
+]
+const timeOptions = [
+  '01',
+  '02',
+  '03',
+  '04',
+  '05',
+  '06',
+  '07',
+  '08',
+  '09',
+  '10',
+  '11',
+  '12',
+  '13',
+  '14',
+  '15',
+  '16',
+  '17',
+  '18',
+  '19',
+  '20',
+  '21',
+  '22',
+  '23',
+  '24'
+]
 
-// function submitForm() {
-//   emit('submit-form', { ...formData })
-// }
-
-const selectedState = ref('')
-function selectState(state) {
-  selectedState.value = state
+function updateStatus(status) {
+  plannerStore.updateFormData({ status: status })
 }
+
+watch(
+  () => formData.scheduleDate,
+  (newVal) => {
+    plannerStore.updateFormData({ scheduleDate: newVal })
+  }
+)
+
+watch(
+  () => formData.deadlineTime,
+  (newVal) => {
+    plannerStore.updateFormData({ deadlineTime: newVal })
+  }
+)
+
+watch(
+  () => formData.content,
+  (newVal) => {
+    plannerStore.updateFormData({ content: newVal })
+  }
+)
 </script>
 
 <style lang="scss" scoped>

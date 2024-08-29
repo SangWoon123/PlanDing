@@ -14,12 +14,10 @@
 
 <script setup>
 import { computed } from 'vue'
+import { usePlannerStore } from '@/store/planner'
+
 const props = defineProps({
-  state: {
-    type: String,
-    required: true
-  },
-  selectedState: {
+  status: {
     type: String,
     required: true
   },
@@ -41,9 +39,12 @@ const props = defineProps({
   }
 })
 const emit = defineEmits(['select'])
-const isActive = computed(() => props.selectedState === props.state)
+const plannerStore = usePlannerStore()
+
+const isActive = computed(() => plannerStore.formData.status === props.status)
+
 function handleClick() {
-  emit('select', props.state)
+  emit('select', props.status)
 }
 </script>
 
@@ -53,11 +54,13 @@ function handleClick() {
   height: 8px;
   border-radius: 50%;
 }
+
 .state-button {
   border-radius: 8px;
   border: 1px solid #a2a3b6;
   font-size: 12px;
 }
+
 .state-button.active {
   background-color: #007bff;
   color: white;
