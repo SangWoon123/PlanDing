@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
 import {
   getScheduleAlarm,
   deleteAlarm,
@@ -11,8 +10,8 @@ import {
 
 export const useAlarmStore = defineStore('alarm', {
   state: () => ({
-    invites: ref([]),
-    scheduleAlarm: ref([])
+    invites: [],
+    scheduleAlarm: []
   }),
   actions: {
     async postInvitation(groupCode, userCode) {

@@ -5,15 +5,18 @@
         <v-expand-transition group>
           <v-alert
             rounded="xl"
-            icon="$vuetify"
             prominent
             width="450px"
             height="100px"
-            color="#ECEDED"
+            color="#FFFFFF"
             elevation="2"
             closable
             @click:close="handleClose(item)"
           >
+            <template v-slot:prepend>
+              <img src="/planding_icon.png" alt="Icon" class="alert-icon" />
+            </template>
+
             <div class="alert-content">
               <div class="alert-title">
                 <div class="alert-title-header">
@@ -92,5 +95,10 @@ function handleClose(item) {
 
 .alert-text {
   font-size: 14px;
+}
+
+.alert-icon {
+  width: 60px;
+  height: 60px;
 }
 </style>

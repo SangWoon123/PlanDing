@@ -6,17 +6,21 @@
           <v-alert
             v-show="item"
             rounded="lg"
-            icon="$vuetify"
             width="450px"
             height="150px"
             elevation="2"
-            color="deep-purple-lighten-5"
+            color="#FFFFFF"
             closable
             @click:close="handleClose(item)"
           >
+
+          <template v-slot:prepend>
+              <img src="/planding_icon.png" alt="Icon" class="alert-icon" />
+            </template>
+
             <v-row class="alert-content">
               <v-col col="3" class="logo-col">
-                <v-img src="/planding.png" alt="Logo" width="50px" contain />
+                <v-img src="/planding_icon.png" alt="Logo"  contain />
               </v-col>
               <v-col cols="9">
                 <div class="alert-title">
@@ -105,5 +109,10 @@ function handleClose(item) {
   .v-btn {
     flex: 1;
   }
+}
+
+.alert-icon {
+  width: 60px;
+  height: 60px;
 }
 </style>

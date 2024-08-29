@@ -1,9 +1,16 @@
 <template>
-  <div class="pa-4 text-center">
+  <div class="text-center" style="padding: 16px 0 0 0">
     <CustomFab @click="toggleMenu">
       <v-menu v-model="isMenuOpen" location="end" offset-y :close-on-content-click="false">
         <template v-slot:activator="{ props }">
-          <v-btn v-bind="props" width="100%" height="100%" density="compact" variant="plain" :ripple="false"/>
+          <v-btn
+            v-bind="props"
+            width="100%"
+            height="100%"
+            density="compact"
+            variant="plain"
+            :ripple="false"
+          />
         </template>
 
         <v-card width="400" height="600" rounded="xl" class="card">
@@ -31,7 +38,7 @@
 <script setup>
 import ChatPage from './ChatPage.vue'
 import InvitePage from './InvitePage.vue'
-import CustomFab from '@/components/ui/CustomFab.vue';
+import CustomFab from '@/components/ui/CustomFab.vue'
 import { ref } from 'vue'
 const active = ref(true)
 
