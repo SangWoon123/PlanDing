@@ -22,11 +22,11 @@
           <TodoFrom />
         </div>
         <div class="schedule-people">
-          <PeopleSetting  />
+          <PeopleSetting />
         </div>
       </div>
       <div class="schedule-actions">
-        <v-btn rounded="lg" color="#656AE6" @click="createPlanner">일정 만들기</v-btn>
+        <v-btn rounded="lg" color="#656AE6" @click="$emit('create')">일정 만들기</v-btn>
         <v-btn rounded="lg" color="#656AE6" variant="outlined" @click="$emit('close')">취소</v-btn>
       </div>
     </BaseCard>
@@ -37,33 +37,8 @@
 import BaseCard from '../../ui/BaseCard.vue'
 import TodoFrom from './TodoFrom.vue'
 import PeopleSetting from './PeopleSetting.vue'
-import { inject, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import { useAuthStore } from '@/store/store'
-import { userGroupsStore } from '@/store/group'
-defineEmits(['close'])
 
-const groupStore=userGroupsStore()
-const client = inject('websocketClient')
-const userStore = useAuthStore()
-const groupCode = ref(useRoute().params.groupCode)
-
-const postInfo = {
-  title: '',
-  content: '',
-  status: '',
-  deadline: '',
-  managerCode: '',
-  userCodes: [],
-  scheduleId: ''
-}
-function createPlanner() {
-  const headers = {
-    Authorization: `Bearer ${userStore.accessToken}`,
-    groupCode: groupCode.value
-  }
-  client.value.send(`/pub/planner/create/${headers.groupCode}`, {}, JSON.stringify(postInfo))
-}
+defineEmits(['close', 'create'])
 </script>
 
 <style lang="scss" scoped>

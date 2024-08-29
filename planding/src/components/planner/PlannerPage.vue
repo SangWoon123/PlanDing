@@ -22,8 +22,8 @@
     <div class="planner__content-body">
       <PlannerItemParent />
     </div>
-    <div v-if="isFormOpen" class="modal-overlay" @click.self="closeForm">
-      <PlannerForm @close="closeForm" />
+    <div v-if="isModalOpen" class="modal-overlay" @click.self="closeForm">
+      <PlannerForm @close="closeForm" @create="createPlanner" />
     </div>
   </div>
 </template>
@@ -33,15 +33,31 @@ import BaseTitle from '../ui/BaseTitle.vue'
 import AddButton from '../ui/AddButton.vue'
 import PlannerItemParent from './PlannerItemParent.vue'
 import PlannerForm from './modal/PlannerForm.vue'
-import { ref } from 'vue'
+import { useModal } from '@/hook/useModal'
+import { useAuthStore } from '@/store/store'
+import { useRoute } from 'vue-router'
+import { usePlannerStore } from '@/store/planner'
+import { inject, ref } from 'vue'
 
-const isFormOpen = ref(false)
+const { isOpen: isModalOpen, open: openForm, close: closeForm } = useModal()
 
-function openForm() {
-  isFormOpen.value = true
-}
-function closeForm() {
-  isFormOpen.value = false
+const client = inject('websocketClient')
+const userStore = useAuthStore()
+const groupCode = ref(useRoute().params.groupCode)
+const plannerStore = usePlannerStore()
+
+function createPlanner() {
+  const headers = {
+    Authorization: `Bearer ${userStore.accessToken}`,
+    groupCode: groupCode.value
+  }
+  console.log(plannerStore.formData)
+  client.value.send(
+    `/pub/planner/create/${headers.groupCode}`,
+    {},
+    JSON.stringify(plannerStore.submitForm())
+  )
+  closeForm()
 }
 </script>
 
