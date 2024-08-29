@@ -10,6 +10,7 @@
     >
       <template v-slot:header="{ title }">
         <CalendarNavigation
+          :group="group"
           :title="title"
           :view_mode="view_mode"
           @prev="prev"
@@ -29,10 +30,13 @@
 
 <script setup>
 import { useDateStore } from '@/store/date'
-import CalendarNavigation from './CalendarNavigation.vue'
+import CalendarNavigation from './CalendarNavigation.vue';
 import { ref, onMounted, watch } from 'vue'
 
 const props = defineProps({
+  group: {
+    type: Boolean
+  },
   events: {
     type: Array
   },
