@@ -21,8 +21,8 @@
 
 <script setup>
 import { ref, defineEmits } from 'vue'
-import SubTitle from '../ui/SubTitle.vue';
-import baseImage from '../../assets/load.png'
+import SubTitle from '@/components/ui/SubTitle.vue';
+import baseImage from '../../../assets/load.png'
 
 const imageSrc = ref(null)
 const emit = defineEmits(['update-thumbnail'])

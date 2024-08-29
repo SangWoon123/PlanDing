@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import UsersProfile from '../ListPage/Information/UsersProfile.vue'
+import UsersProfile from '../ui/user/UsersProfile.vue'
 </script>
 
 <style lang="scss" scoped>
@@ -54,7 +54,7 @@ import UsersProfile from '../ListPage/Information/UsersProfile.vue'
       color: #ffffff;
       border-radius: 8px 8px 0 0;
       position: relative;
-      border-bottom: 1px solid #A2A3B6;
+      border-bottom: 1px solid #a2a3b6;
     }
   }
 }

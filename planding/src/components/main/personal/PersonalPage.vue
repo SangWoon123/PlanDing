@@ -20,7 +20,7 @@
 import LeftRightContainer from '../LeftRightContainer.vue'
 import ScheduleManager from '../ScheduleManager.vue'
 import PersonalSchedule from './PersonalSchedule.vue'
-import UsersProfile from '@/components/ListPage/Information/UsersProfile.vue'
+import UsersProfile from '@/components/ui/user/UsersProfile.vue'
 import { useAuthStore } from '@/store/store'
 import { scheduleStore } from '@/store/schedule'
 

@@ -28,8 +28,8 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import DateInput from './DateInput.vue'
-import TimePicker from './TimePicker.vue'
+import DateInput from '../../ui/date/DateInput.vue'
+import TimePicker from '../../ui/date/TimePicker.vue'
 defineProps({
   create: Function
 })

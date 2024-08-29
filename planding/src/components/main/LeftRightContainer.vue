@@ -13,7 +13,7 @@
 
 <script setup>
 import RightComponent from './right/\bRightComponent.vue'
-import ScheduleCreate from '../ListPage/Information/ScheduleCreate.vue'
+import ScheduleCreate from './right/ScheduleCreate.vue'
 import LeftComponent from './left/LeftComponent.vue'
 import { useAlarmStore } from '@/store/alarm'
 import { userGroupsStore } from '@/store/group'

@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import SubMenu from '../dialog/SubMenu.vue'
+import SubMenu from '@/components/main/chat/ChatDialog.vue'
 import router from '@/router'
 import { watch } from 'vue'
 import { useRoute } from 'vue-router'
@@ -71,6 +71,5 @@ watch(
       border: 3px solid #363bc9;
     }
   }
-
 }
 </style>

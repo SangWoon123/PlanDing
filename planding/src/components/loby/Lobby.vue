@@ -53,18 +53,18 @@
 
 <script setup>
 import { onMounted, ref, provide } from 'vue'
-import RightComponent from './right/\bRightComponent.vue'
+import RightComponent from '../main/right/\bRightComponent.vue'
 
 import { userGroupsStore } from '@/store/group'
 import SubTitle from '../ui/SubTitle.vue'
-import GroupRoom from './group/GroupRoom.vue'
-import Footer from './right/Footer.vue'
-import GroupCreate from '@/components/Group/GroupCreate.vue'
+import GroupRoom from '../main/group/GroupRoom.vue'
+import Footer from '../main/right/Footer.vue'
+import GroupCreate from './group/GroupCreate.vue'
 import Progress from '@/components/ui/Progress.vue'
 import router from '@/router'
 import { authInstance } from '@/service/authAxios'
 import MouseOver from '../ui/MouseOver.vue'
-import LeftComponent from './left/LeftComponent.vue'
+import LeftComponent from '../main/left/LeftComponent.vue'
 import { useAlarmStore } from '@/store/alarm'
 import { sseConnect } from '@/service/sseService'
 import ScheduleAlarm from '../Notification/schedule/ScheduleAlarm.vue'

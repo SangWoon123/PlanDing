@@ -26,7 +26,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import InviteDialog from '@/components/MainContent/dialog/InviteDialog.vue'
+import InviteDialog from '@/components/main/chat/InviteDialog.vue'
 import { userGroupsStore } from '@/store/group'
 import { useAuthStore } from '@/store/store'
 import { useRoute } from 'vue-router'

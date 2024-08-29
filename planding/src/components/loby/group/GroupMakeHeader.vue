@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import SubTitle from '../ui/SubTitle.vue';
+import SubTitle from '@/components/ui/SubTitle.vue';
 </script>
 
 <style lang="scss" scoped>

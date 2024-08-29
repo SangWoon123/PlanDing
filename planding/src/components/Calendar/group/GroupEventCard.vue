@@ -16,11 +16,7 @@
     </template>
 
     <!-- 카드 디자인 -->
-    <EventCardDetail
-      :event="event"
-      @deleteEvent="deleteEvent"
-      @closeModal="closeModal"
-    >
+    <EventCardDetail :event="event" @deleteEvent="deleteEvent" @closeModal="closeModal">
       <template #attendance>
         <ScheduleAttendance :groupId="event.id" />
       </template>
@@ -31,7 +27,7 @@
 
 <script setup>
 import Avatar from '@/components/ui/Avatar.vue'
-import ScheduleAttendance from '../../Group/ScheduleAttendance.vue'
+import ScheduleAttendance from '@/components/loby/group/ScheduleAttendance.vue'
 import EventCardDetail from '../EventCardDetail.vue'
 import { defineEmits, ref } from 'vue'
 import { useRoute } from 'vue-router'
