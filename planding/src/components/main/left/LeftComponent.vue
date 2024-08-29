@@ -9,18 +9,22 @@
         />
       </div>
     </div>
-    <div class="speed-dialog">
-      <SubMenu />
-      <v-icon>mdi-chat-processing-outline</v-icon>
+    <ChatButton @click="toggleModal" />
+    <div v-if="isModalOpen" class="speed-dialog">
+      <ChattingModal class="modal" />
     </div>
   </div>
 </template>
 
 <script setup>
-import SubMenu from '@/components/main/chat/ChatDialog.vue'
+import ChattingModal from '../chat/ChattingModal.vue'
+import ChatButton from '@/components/main/chat/ChatButton.vue'
 import router from '@/router'
 import { watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { useModal } from '@/hook/useModal'
+const { isOpen: isModalOpen, open: openForm, close: closeForm, toggle: toggleModal } = useModal()
+
 defineProps({
   favoriteGroup: Array,
   invitations: Array
@@ -38,8 +42,6 @@ watch(
   () => route.params.groupCode,
   (newGroupCode, oldGroupCode) => {
     // 라우트 변경에 반응...
-    console.log(newGroupCode)
-    console.log(oldGroupCode)
     router.push({
       path: `/group/${newGroupCode}`
     })
@@ -71,5 +73,26 @@ watch(
       border: 3px solid #363bc9;
     }
   }
+}
+.speed-dialog {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chat-icon {
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.modal {
+  position: absolute;
+  right: 70px;
+  bottom: -30px;
 }
 </style>
