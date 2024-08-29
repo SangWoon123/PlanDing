@@ -33,14 +33,20 @@
 <script setup>
 import PlannerItem from './PeopleItem.vue'
 import { userGroupsStore } from '@/store/group'
+import { usePlannerStore } from '@/store/planner'
+import { useAuthStore } from '@/store/store'
 import { ref } from 'vue'
 
+const plannerStore = usePlannerStore()
 const selectedUsers = ref([])
 const groupStore = userGroupsStore()
+const userStore = useAuthStore()
 
 function handleToggleUser({ userInfo, isAdded }) {
   if (isAdded) {
     selectedUsers.value.push(userInfo)
+    plannerStore.updateFormData({ userCodes: selectedUsers.value.map((user) => user.userCode) })
+    plannerStore.updateFormData({ managerCode: userStore.userCode })
   } else {
     selectedUsers.value = selectedUsers.value.filter((user) => user.userCode !== userInfo.userCode)
   }
@@ -75,5 +81,12 @@ function isSelected(user) {
     font-size: 16px;
     margin-right: 10px;
   }
+}
+
+img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: rebeccapurple;
 }
 </style>

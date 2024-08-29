@@ -2,7 +2,7 @@
   <div class="team-member">
     <div class="team-member__profile">
       <div class="team-member__avatar">
-        <img :src="userInfo.profileImageUrl" alt="" />
+        <img class="team-member__avatar" :src="userInfo.profileImageUrl" alt="" />
       </div>
       <div class="team-member__info">
         <p class="team-member__name">{{ userInfo.userName }}</p>
@@ -28,7 +28,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 
-const props = defineProps({
+defineProps({
   userInfo: Object,
   isSelected: Boolean
 })
