@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import RightComponent from './right/\bRightComponent.vue'
+import RightComponent from './right/RightComponent.vue'
 import ScheduleCreate from './right/ScheduleCreate.vue'
 import LeftComponent from './left/LeftComponent.vue'
 import { useAlarmStore } from '@/store/alarm'

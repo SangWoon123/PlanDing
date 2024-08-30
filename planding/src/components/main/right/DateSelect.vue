@@ -46,6 +46,6 @@ watch(date, (newVal) => {
   font-size: 20px !important;
 }
 :deep(.v-date-picker-month__weekday) {
-  color: #BABBDD !important;
+  color: #babbdd !important;
 }
 </style>

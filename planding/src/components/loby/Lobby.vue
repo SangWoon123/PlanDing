@@ -53,7 +53,7 @@
 
 <script setup>
 import { onMounted, ref, provide } from 'vue'
-import RightComponent from '../main/right/\bRightComponent.vue'
+import RightComponent from '../main/right/RightComponent.vue'
 
 import { userGroupsStore } from '@/store/group'
 import SubTitle from '../ui/SubTitle.vue'

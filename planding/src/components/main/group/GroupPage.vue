@@ -46,6 +46,7 @@ import { Stomp } from '@stomp/stompjs'
 import { useAuthStore } from '@/store/store'
 import SwitchTab from '@/components/ui/SwitchTab.vue'
 
+
 const groupStore = userGroupsStore()
 const route = useRoute()
 const groupInfo = ref({})
