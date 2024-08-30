@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import Invite from './ChatDialog.vue'
+import Invite from './ChatButton.vue'
 import { ref } from 'vue'
 const inviteModal = ref(false)
 function createInvite() {
