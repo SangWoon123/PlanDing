@@ -3,7 +3,11 @@
     <div class="background"></div>
     <div class="box">
       <div class="box__header">
-        <BaseTitle text="OOO 그룹으로 초대하기" size="28px" style="font-weight: 400" />
+        <BaseTitle
+          :text="`${groupTitle}  그룹으로 초대하기`"
+          size="28px"
+          style="font-weight: 400"
+        />
         <span style="font-size: 14px; color: #8889a1">그룹으로 동료를 초대하세요</span>
         <v-divider length="80%"></v-divider>
       </div>
@@ -26,12 +30,16 @@ import BaseTitle from '@/components/ui/BaseTitle.vue'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAlarmStore } from '@/store/alarm'
+import { userGroupsStore } from '@/store/group'
 
 defineEmits(['close'])
 
 const alarmStore = useAlarmStore()
 const inputUserCode = ref('')
 const route = useRoute()
+
+const groupTitle = userGroupsStore().selectGroup.name
+
 
 async function createInvite() {
   const groupCode = route.params.groupCode
