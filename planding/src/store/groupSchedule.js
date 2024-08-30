@@ -1,9 +1,14 @@
 import { defineStore } from 'pinia'
-import { getGroupScheduleInfo, getAllGroupSchedule } from '@/service/scheduleController'
+import {
+  getGroupScheduleInfo,
+  getAllGroupSchedule,
+  getWeekScheduleByGroup
+} from '@/service/scheduleController'
 
 export const usegroupScheduleStore = defineStore('groupSchedule', {
   state: () => ({
-    groupSchedules: []
+    groupSchedules: [],
+    weekSchedules: []
   }),
   actions: {
     async groupScheduleInfo(groupCode, scheduleId) {
@@ -13,6 +18,11 @@ export const usegroupScheduleStore = defineStore('groupSchedule', {
     async getAllGroupSchedule(groupCode) {
       const response = await getAllGroupSchedule(groupCode)
       this.groupSchedules = response
-    }
+    },
+    // async getWeekScheduleByGroup(groupCode, startDate, endDate) {
+    //   const response = await getWeekScheduleByGroup(groupCode, startDate, endDate)
+    //   console.log('샂해',response)
+    //   this.weekSchedules = response
+    // }
   }
 })

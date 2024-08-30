@@ -1,4 +1,9 @@
 import { defineStore } from 'pinia'
+import {
+  getPlannerById,
+  getPlannersByGroup,
+  getWeekPlannerByGroup
+} from '@/service/plannerController'
 
 export const usePlannerStore = defineStore('planner', {
   state: () => ({
@@ -11,7 +16,9 @@ export const usePlannerStore = defineStore('planner', {
       content: '', // 일정 상세 설명
       managerCode: '', // 관리자 코드
       userCodes: [] // 선택된 사용자 코드 배열
-    }
+    },
+    plannerInfo: [],
+    weekPlanners: []
   }),
   actions: {
     updateFormData(newData) {
@@ -27,6 +34,14 @@ export const usePlannerStore = defineStore('planner', {
         ...this.formData,
         deadline: this.getLocalDateTime()
       }
-    }
+    },
+    async getPlannersByGroup(groupCode, scheduleId) {
+      const response = await getPlannersByGroup(groupCode, scheduleId)
+      this.plannerInfo = response
+    },
+    async getWeekPlannerByGroup(groupCode, startDate, endDate) {
+      const response = await getWeekPlannerByGroup(groupCode, startDate, endDate)
+      this.weekPlanners = response
+    },
   }
 })

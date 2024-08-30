@@ -1,7 +1,7 @@
 <template>
   <div class="planner">
     <div class="planner__header">
-      <BaseTitle text="나의 일정표" size="24px" />
+      <BaseTitle :text="`${groupStore.selectGroup.name} 일정표`" size="24px" />
     </div>
 
     <div class="planner__content">
@@ -17,13 +17,17 @@
           <div>종료일</div>
         </div>
       </div>
+      <div v-if="isModalOpen" class="modal-overlay" @click.self="closeForm">
+        <PlannerForm @close="closeForm" @create="createPlanner" />
+      </div>
     </div>
 
-    <div class="planner__content-body">
-      <PlannerItemParent />
-    </div>
-    <div v-if="isModalOpen" class="modal-overlay" @click.self="closeForm">
-      <PlannerForm @close="closeForm" @create="createPlanner" />
+    <div
+      class="planner__content-body"
+      v-for="(item, index) in plannerStore.weekPlanners"
+      :key="index"
+    >
+      <PlannerItemParent :schedule="item" />
     </div>
   </div>
 </template>
@@ -37,33 +41,68 @@ import { useModal } from '@/hook/useModal'
 import { useAuthStore } from '@/store/store'
 import { useRoute } from 'vue-router'
 import { usePlannerStore } from '@/store/planner'
-import { inject, ref } from 'vue'
+import { inject, onMounted, ref, watch } from 'vue'
+import { useDateStore } from '@/store/date'
+import { userGroupsStore } from '@/store/group'
+import { getPlannerById } from '@/service/plannerController'
 
 const { isOpen: isModalOpen, open: openForm, close: closeForm } = useModal()
 
 const client = inject('websocketClient')
+const groupStore = userGroupsStore()
 const userStore = useAuthStore()
 const groupCode = ref(useRoute().params.groupCode)
 const plannerStore = usePlannerStore()
+const dateStore = useDateStore()
+const weekDate = ref({})
 
 function createPlanner() {
   const headers = {
     Authorization: `Bearer ${userStore.accessToken}`,
     groupCode: groupCode.value
   }
-  console.log(plannerStore.formData)
-  client.value.send(
-    `/pub/planner/create/${headers.groupCode}`,
-    {},
-    JSON.stringify(plannerStore.submitForm())
-  )
+
+  const newPlanner = plannerStore.submitForm()
+  client.value.send(`/pub/planner/create/${headers.groupCode}`, {}, JSON.stringify(newPlanner))
+
+  console.log('생성 폼',newPlanner)
+
+  //TODO 고쳐야함
+  plannerStore.weekPlanners.forEach(async(planner) => {
+    if (planner.scheduleId === newPlanner.scheduleId) {
+      console.log('forEach', planner.planner)
+      // planner.planner.push(response)
+      // getPlannerById(groupCode,)
+    }
+  })
   closeForm()
 }
+
+async function fetchPlannerData() {
+  const current = dateStore.caculateWeekRange(new Date())
+  await plannerStore.getWeekPlannerByGroup(groupCode.value, current.startDate, current.endDate)
+}
+
+onMounted(() => {
+  fetchPlannerData()
+})
+
+watch(
+  () => dateStore.selectedDate,
+  async (newVal) => {
+    weekDate.value = useDateStore().caculateWeekRange(newVal)
+    await plannerStore.getWeekPlannerByGroup(
+      groupCode.value,
+      weekDate.value.startDate,
+      weekDate.value.endDate
+    )
+  }
+)
 </script>
 
 <style lang="scss" scoped>
 .planner {
-  height: 100vh;
+  height: 100vw;
   background-color: white;
   position: relative;
 
@@ -143,12 +182,12 @@ function createPlanner() {
 .modal-overlay {
   position: fixed;
   top: 0;
-  left: 0;
   width: 100%;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
+  // background-color: rgb(0, 0, 0,0.5);
+  z-index: 1;
 }
 </style>

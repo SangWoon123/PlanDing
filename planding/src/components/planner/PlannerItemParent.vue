@@ -1,27 +1,38 @@
 <template>
-  <div class="planner-item-outer" @click="click = !click">
+  <div class="planner-item-outer" @click="whenClick">
     <div class="planner-item">
       <div class="planner-item__title">
         <button class="button">
           <v-icon>{{ click ? 'mdi-chevron-down' : 'mdi-chevron-up' }}</v-icon>
         </button>
-        일정 제목은 이렇다
+        {{ schedule.scheduleTitle }}
       </div>
-      <div class="planner-item__schedule">5개</div>
-      <div class="planner-item__start">2024년 8월 18일</div>
+      <div class="planner-item__schedule">{{ `${schedule.planners.length} 개` }}</div>
+      <div class="planner-item__start">{{ schedule.scheduleDate }}</div>
       <div class="planner-item__end">2024년 8월 18일</div>
       <!-- <AddButton text="상세보기" class="planner-item__details" icon="mdi-chevron-right" type /> -->
     </div>
   </div>
   <div v-if="click">
-    <PlannerItemChild />
+    <div v-for="(planner, index) in schedule.planners" :key="index">
+      <PlannerItemChild :planner="planner" />
+    </div>
   </div>
 </template>
 
 <script setup>
 import PlannerItemChild from './PlannerItemChild.vue'
 import { ref } from 'vue'
+import { usePlannerStore } from '@/store/planner'
+import { useRoute } from 'vue-router'
+const props = defineProps({
+  schedule: Object
+})
 const click = ref(false)
+
+function whenClick() {
+  click.value = !click.value
+}
 </script>
 
 <style lang="scss" scoped>

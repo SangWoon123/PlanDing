@@ -26,3 +26,14 @@ export const getAllGroupSchedule = async (groupCode) => {
     console.error(error)
   }
 }
+
+export const getWeekScheduleByGroup = async (groupCode, startDate, endDate) => {
+  try {
+    const response = await authInstance('/api/v1/group-rooms/week').get(
+      `/${groupCode}/${startDate}/${endDate}`
+    )
+    return response.data.data
+  } catch (error) {
+    console.error(error)
+  }
+}

@@ -1,27 +1,32 @@
 <template>
   <div class="container">
-    <div class="title">일정 제목은 이렇다</div>
+    <div class="title">{{ planner.title }}</div>
     <div class="second">
       <div class="manager">
-        <div class="avatar"></div>
-        <p>관리자 이름</p>
+        <!-- <div class="avatar"></div> -->
+        <img :src="planner.manager.profileImage" class="avatar" />
+        <p>{{ planner.manager.username }}</p>
       </div>
       <div class="user">
-        <div class="avatar"></div>
-        <span>+3</span>
+        <div v-for="(user, index) in displayedUsers" :key="index">
+          <img :src="user.profileImage" class="avatar" />
+        </div>
+        <span v-if="extraUsersCount > 0">+{{ extraUsersCount }}</span>
       </div>
       <div class="state">
         <StateButton
-          state="pending"
-          color="#e15a5a"
+          :state="planner.status"
+          :color="stateConfig[planner.status].color"
           width="20"
           height="20"
-          label="진행중"
+          :label="stateConfig[planner.status].label"
           style="border: none"
         />
       </div>
       <div class="end">
-        <span>8월 21일</span>
+        <span>{{
+          `${new Date(planner.deadline).getMonth() + 1}월${new Date(planner.deadline).getDate()}일${new Date(planner.deadline).getHours()}시 `
+        }}</span>
         <span>까지</span>
       </div>
     </div>
@@ -34,7 +39,18 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import StateButton from './modal/StateButton.vue'
+const props = defineProps({
+  planner: Object
+})
+const stateConfig = {
+  IN_PROGRESS: { label: '진행중', color: '#f3ee6e' },
+  DONE: { label: '완료', color: '#87df79' },
+  TODO: { label: '진행대기', color: '#e15a5a' }
+}
+const displayedUsers = computed(() => props.planner.users.slice(0, 3))
+const extraUsersCount = computed(() => props.planner.users.length - 3)
 </script>
 
 <style lang="scss" scoped>
@@ -46,8 +62,8 @@ import StateButton from './modal/StateButton.vue'
   justify-content: flex-start;
   align-items: center;
   font-size: 12px;
-  border-top: 1px solid #E2E3E8;
-  border-bottom: 1px solid #E2E3E8;
+  border-top: 1px solid #e2e3e8;
+  border-bottom: 1px solid #e2e3e8;
 }
 .title {
   margin-left: 32px;

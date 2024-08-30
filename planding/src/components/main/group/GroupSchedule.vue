@@ -9,14 +9,16 @@
 <script setup>
 import CustomCalendar from '@/components/Calendar/CustomCalendar.vue'
 import EventCard from '@/components/Calendar/group/GroupEventCard.vue'
-import { ref, inject } from 'vue'
+import { ref, inject, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/store/store'
 import { scheduleStore } from '@/store/schedule'
 import { usegroupScheduleStore } from '@/store/groupSchedule'
+import { useDateStore } from '@/store/date'
 
 //socket
 const route = useRoute()
+const dateStore = useDateStore()
 const client = inject('websocketClient')
 const userStore = useAuthStore()
 const groupCode = ref(route.params.groupCode)
@@ -25,8 +27,8 @@ const headers = {
   groupCode: groupCode.value
 }
 
-const value = ref([new Date()])
 const events = ref([])
+const weekDate = ref({})
 const view_mode = ref('month')
 const colors = ['#8487e2', '#5f64d9', '#656ae6']
 
@@ -34,28 +36,7 @@ function rnd(a, b) {
   return Math.floor((b - a + 1) * Math.random()) + a
 }
 
-const { startDay, endDay } = getWeekDays()
-
-function getWeekDays() {
-  const today = new Date(value.value)
-  let startOfWeek, endOfWeek
-
-  if (view_mode.value === 'week') {
-    const dayOfWeek = today.getDay()
-    startOfWeek = new Date(today)
-    startOfWeek.setDate(today.getDate() - dayOfWeek)
-    endOfWeek = new Date(startOfWeek)
-    endOfWeek.setDate(startOfWeek.getDate() + 6)
-  } else {
-    startOfWeek = new Date(today.getFullYear(), today.getMonth(), 1)
-    endOfWeek = new Date(today.getFullYear(), today.getMonth() + 1, 0)
-  }
-
-  return {
-    startDay: startOfWeek.toISOString().split('T')[0],
-    endDay: endOfWeek.toISOString().split('T')[0]
-  }
-}
+const { startDay, endDay } = dateStore.getWeekDays(view_mode, new Date())
 
 const groupScheduleStore = usegroupScheduleStore()
 
@@ -82,17 +63,9 @@ function handleWebSocketMessage(message) {
   }
 }
 
-async function fetchData() {
-  client.value.connect(headers, () => {
-    client.value.subscribe(`/sub/schedule/${headers.groupCode}`, handleWebSocketMessage)
-  })
-
-  // 그룹 스케줄 전부 가져온다
-  await groupScheduleStore.getAllGroupSchedule(groupCode.value)
-
-  const schedules = await scheduleStore().getGroupScheduleOfWeek(groupCode.value, startDay, endDay)
-
-  schedules.data.data.forEach((schedule) => {
+function addEvent(schedule) {
+  const eventExists = Array.from(events.value).some((event) => event.id === schedule.id)
+  if (!eventExists) {
     events.value.push({
       id: schedule.id,
       title: schedule.title,
@@ -101,8 +74,34 @@ async function fetchData() {
       color: colors[rnd(0, colors.length - 1)],
       timed: true
     })
-  })
+  }
 }
+
+async function fetchData() {
+  client.value.connect(headers, () => {
+    client.value.subscribe(`/sub/schedule/${headers.groupCode}`, handleWebSocketMessage)
+  })
+
+  // 그룹 스케줄 전부 가져온다
+  await groupScheduleStore.getAllGroupSchedule(groupCode.value)
+  await updateEvents(startDay, endDay)
+}
+async function updateEvents(startDate, endDate) {
+  const schedules = await scheduleStore().getGroupScheduleOfWeek(
+    groupCode.value,
+    startDate,
+    endDate
+  )
+  schedules.data.data.forEach(addEvent)
+}
+
+watch(
+  () => dateStore.selectedDate,
+  async (newVal) => {
+    weekDate.value = useDateStore().caculateWeekRange(newVal)
+    await updateEvents(weekDate.value.startDate, weekDate.value.endDate)
+  }
+)
 </script>
 
 <style lang="scss" scoped></style>
