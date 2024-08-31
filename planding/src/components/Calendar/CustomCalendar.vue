@@ -63,7 +63,6 @@ const calendar = ref(null)
 const weekday = ref([0, 1, 2, 3, 4, 5, 6])
 const value = ref([new Date()])
 
-//v-calendar event
 function handleViewMode(event) {
   view_mode.value = event
 }
