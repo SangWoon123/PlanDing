@@ -20,6 +20,10 @@
         </div>
 
         <SubTitle text="Team Plan" />
+        <div v-if="groupStore.groups.length >= 11" style="display: flex">
+          <v-btn icon="mdi-arrow-left" @click="goToPreviousPage" :disabled="currentPage < 0" />
+          <v-btn icon="mdi-arrow-right" @click="goToNextPage" />
+        </div>
         <div class="team-plan-content" style="height: 100%; border-radius: 0 0 4px 4px">
           <GroupRoom class="group-room" @click="createGroup" title="그룹 생성" />
           <div v-if="!loading" v-for="group in groupStore.groups" :key="group.id">
@@ -75,9 +79,22 @@ const createdAt = '1시간전'
 const groupModal = ref(false)
 const loading = ref(true)
 const todaySchedule = ref([])
+const currentPage = ref(0)
 
 const groupStore = userGroupsStore()
 const alarmStore = useAlarmStore()
+
+const goToNextPage = async () => {
+  currentPage.value += 1
+  await fetchGroups(currentPage.value + 1)
+}
+
+const goToPreviousPage = async () => {
+  if (currentPage.value > 0) {
+    currentPage.value -= 1
+    await fetchGroups(currentPage.value - 1)
+  }
+}
 
 const createGroup = () => {
   groupModal.value = !groupModal.value
@@ -99,10 +116,11 @@ function navigatorToPersonal() {
   })
 }
 
-const fetchGroups = async () => {
+const fetchGroups = async (page = 0) => {
   try {
-    await groupStore.getGroups()
+    await groupStore.getGroups(page)
     loading.value = false
+    currentPage.value = page
   } catch (error) {
     console.log('그룹 데이터 실패', error)
   } finally {
@@ -126,7 +144,7 @@ onMounted(async () => {
     initializeConnection()
   }
   // 유저 그룹 가져오기
-  fetchGroups()
+  fetchGroups(currentPage.value)
   // 오늘 스케줄
   todaySchedule.value = await showTodaySchedule()
   // 즐겨찾기 그룹
