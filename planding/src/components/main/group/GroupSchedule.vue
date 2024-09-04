@@ -51,15 +51,15 @@ function handleWebSocketMessage(message) {
   const data = JSON.parse(message.body).data
   if (data.action === 'CREATE') {
     events.value.push({
-      id: data.id,
-      title: data.title,
-      start: new Date(new Date(data.scheduleDate).setHours(data.startTime)),
-      end: new Date(new Date(data.scheduleDate).setHours(data.endTime)),
+      id: data.scheduleCommonResponse.id,
+      title: data.scheduleCommonResponse.title,
+      start: new Date(new Date(data.scheduleCommonResponse.scheduleDate).setHours(data.scheduleCommonResponse.startTime)),
+      end: new Date(new Date(data.scheduleCommonResponse.scheduleDate).setHours(data.scheduleCommonResponse.endTime)),
       color: colors[rnd(0, colors.length - 1)],
       timed: true
     })
   } else if (data.action === 'DELETE') {
-    events.value = events.value.filter((event) => event.id !== data.id)
+    events.value = events.value.filter((event) => event.id !== data.scheduleCommonResponse.id)
   }
 }
 
@@ -67,10 +67,10 @@ function addEvent(schedule) {
   const eventExists = Array.from(events.value).some((event) => event.id === schedule.id)
   if (!eventExists) {
     events.value.push({
-      id: schedule.id,
-      title: schedule.title,
-      start: new Date(new Date(schedule.scheduleDate).setHours(schedule.startTime)),
-      end: new Date(new Date(schedule.scheduleDate).setHours(schedule.endTime)),
+      id: schedule.scheduleCommonResponse.id,
+      title: schedule.scheduleCommonResponse.title,
+      start: new Date(new Date(schedule.scheduleCommonResponse.scheduleDate).setHours(schedule.scheduleCommonResponse.startTime)),
+      end: new Date(new Date(schedule.scheduleCommonResponse.scheduleDate).setHours(schedule.scheduleCommonResponse.endTime)),
       color: colors[rnd(0, colors.length - 1)],
       timed: true
     })

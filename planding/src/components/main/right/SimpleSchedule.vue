@@ -2,11 +2,11 @@
   <div :class="isPast ? 'past-box' : 'box'">
     <div class="header">
       <span class="time">
-        {{ `${formatTime(schedule.startTime)} - ${formatTime(schedule.endTime)}` }}
+        {{ `${formatTime(schedule.scheduleCommonResponse.startTime)} - ${formatTime(schedule.scheduleCommonResponse.endTime)}` }}
       </span>
-      <span class="group" v-if="schedule.groupName"></span>
+      <span class="group" v-if="schedule.scheduleCommonResponse.groupName"></span>
     </div>
-    <span class="title">{{ schedule.title }}</span>
+    <span class="title">{{ schedule.scheduleCommonResponse.title }}</span>
   </div>
 </template>
 
@@ -21,7 +21,7 @@ function formatTime(time) {
 }
 
 const isPast = computed(() => {
-  const endTime = props.schedule.endTime
+  const endTime = props.schedule.scheduleCommonResponse.endTime
   return endTime < new Date().getHours()
 })
 </script>
