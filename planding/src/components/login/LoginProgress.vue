@@ -8,23 +8,34 @@
 import router from '@/router'
 import { useAuthStore } from '@/store/store'
 import Progress from '../ui/Progress.vue'
-const queryParams = new URLSearchParams(location.search)
-const accessToken = queryParams.get('accessToken')
+import { onMounted } from 'vue'
+import { authInstance } from '@/service/authAxios'
 
-const handleKakaoLogin = async (token) => {
-  const authStore = useAuthStore()
-  authStore.saveToken(token)
+const handleKakaoLogin = async () => {
 
-  try {
-    router.push('/planding')
-  } catch (error) {
-    console.error(error)
+  // 쿼리스트링
+  const temporaryToken = new URLSearchParams(window.location.search).get('temporary')
+
+  const data={
+    temporaryToken: temporaryToken
+  }
+  const response = await authInstance('/api/v1/temporary-token').post('',data)
+
+  const accessToken=response.headers['access-token']
+  const refreshToken=response.headers['refresh-token']
+  if (accessToken) {
+    const authStore = useAuthStore();
+    authStore.saveAccessToken(accessToken);
+    authStore.saverefreshToken(refreshToken);
+    router.push('/planding');
+  } else {
+    console.error('토큰을 찾을 수 없습니다.');
   }
 }
 
-if (accessToken) {
-  handleKakaoLogin(accessToken)
-}
+onMounted(() => {
+  handleKakaoLogin()
+})
 </script>
 
 <style lang="scss" scoped></style>
