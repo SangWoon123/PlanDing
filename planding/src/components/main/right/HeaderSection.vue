@@ -13,12 +13,20 @@
         </div>
       </figure>
 
-      <router-link to="/" @click="logout" class="logout" type="button">로그아웃</router-link>
+      <button @click="logoutRequest" class="logout" type="button">로그아웃</button>
     </div>
 
     <div class="two">
+      <!-- 홈 -->
+      <router-link to="/planding">
+        <v-btn density="compact" stacked variant="plain" class="icon-btn">
+          <v-icon>mdi-home-outline</v-icon>
+        </v-btn>
+      </router-link>
+      <!-- 알림 -->
       <v-menu location="top" offset-y :close-on-content-click="false">
         <template v-slot:activator="{ props }">
+          <!-- 알림버튼 -->
           <v-btn
             v-bind="props"
             @click="notification = true"
@@ -108,6 +116,7 @@
           </div>
         </v-card>
       </v-menu>
+      <!-- 유저 -->
       <v-btn density="compact" stacked variant="plain" class="icon-btn">
         <v-icon>mdi-account-edit-outline</v-icon>
       </v-btn>
@@ -120,7 +129,9 @@ import baseImage from '../../../assets/Ellipse.png'
 import ScheduleNotification from '@/components/Notification/ScheduleNotification.vue'
 import InviteNotification from '@/components/Notification/InviteNotification.vue'
 import { useAuthStore } from '@/store/store'
-import { computed, inject, onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { logout } from '@/service/utils/logout'
+import { sseConnect } from '@/service/sseService'
 
 const props = defineProps({
   invitations: Array,
@@ -159,19 +170,22 @@ const userInfo = useAuthStore()
 const alarmMessageCount = computed(() => {
   return (props.schedules?.length || 0) + (props.invitations?.length || 0)
 })
-const connect = inject('sse')
 
 onMounted(async () => {
   await userInfo.getUserInfo()
 })
 
-const logout = () => {
-  console.log('zzz')
-  if (connect.value) {
-    connect.value.close()
-    connect.value = null
+const connect = sseConnect()
+const logoutRequest = async () => {
+  try {
+    //sse 종료
+    if (connect) {
+      connect.close()
+    }
+    await logout()
+  } catch (error) {
+    console.error('로그아웃 중 오류 발생:', error)
   }
-  userInfo.clearAuth()
 }
 </script>
 
