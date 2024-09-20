@@ -1,5 +1,8 @@
 <template>
-  <section id="container">
+  <div v-if="isLoading" style="display: flex; justify-content: center; align-items: center">
+    <Progress />
+  </div>
+  <section v-else id="container">
     <RightComponent :invitations="alarmStore.invites" :schedules="alarmStore.scheduleAlarm">
       <template #footer>
         <Footer :data="todaySchedule" />
@@ -19,14 +22,30 @@
           />
         </div>
 
-        <SubTitle text="Team Plan" />
-        <div v-if="groupStore.groups.length >= 11" style="display: flex">
-          <v-btn icon="mdi-arrow-left" @click="goToPreviousPage" :disabled="currentPage < 0" />
-          <v-btn icon="mdi-arrow-right" @click="goToNextPage" />
+        <div class="team-header">
+          <!-- 팀 스케줄 -->
+          <SubTitle text="Team Plan" />
+          <!-- 페이징 -->
+          <div class="arrow">
+            <v-btn
+              flat
+              icon="mdi-arrow-left"
+              color="#5f64d9"
+              @click="goToPreviousPage"
+              :disabled="currentPage - 1 < 0"
+            />
+            <v-btn
+              flat
+              icon="mdi-arrow-right"
+              color="#5f64d9"
+              @click="goToNextPage"
+              :disabled="groupStore.groups.length < 10"
+            />
+          </div>
         </div>
         <div class="team-plan-content" style="height: 100%; border-radius: 0 0 4px 4px">
           <GroupRoom class="group-room" @click="createGroup" title="그룹 생성" />
-          <div v-if="!loading" v-for="group in groupStore.groups" :key="group.id">
+          <div v-for="group in groupStore.groups" :key="group.id">
             <MouseOver :groupCode="group.code" :bookmark="isBookmarked(group.code)">
               <GroupRoom
                 @click="navigatorToGroup(group)"
@@ -35,11 +54,6 @@
                 :createdAt="createdAt"
               />
             </MouseOver>
-          </div>
-
-          <!-- 데이터 로딩중일때 -->
-          <div v-else>
-            <Progress />
           </div>
         </div>
       </div>
@@ -58,13 +72,12 @@
 <script setup>
 import { onMounted, ref, provide } from 'vue'
 import RightComponent from '../main/right/RightComponent.vue'
-
+import Progress from '@/components/ui/Progress.vue'
 import { userGroupsStore } from '@/store/group'
 import SubTitle from '../ui/SubTitle.vue'
 import GroupRoom from '../main/group/GroupRoom.vue'
 import Footer from '../main/right/Footer.vue'
 import GroupCreate from './group/GroupCreate.vue'
-import Progress from '@/components/ui/Progress.vue'
 import router from '@/router'
 import { authInstance } from '@/service/authAxios'
 import MouseOver from '../ui/MouseOver.vue'
@@ -74,10 +87,10 @@ import { sseConnect } from '@/service/sseService'
 import ScheduleAlarm from '../Notification/schedule/ScheduleAlarm.vue'
 import InviteAlarm from '../Notification/invite/InviteAlarm.vue'
 
+const isLoading = ref(true)
 const createdAt = '1시간전'
 
 const groupModal = ref(false)
-const loading = ref(true)
 const todaySchedule = ref([])
 const currentPage = ref(0)
 
@@ -85,14 +98,12 @@ const groupStore = userGroupsStore()
 const alarmStore = useAlarmStore()
 
 const goToNextPage = async () => {
-  currentPage.value += 1
-  await fetchGroups(currentPage.value + 1)
+  await fetchGroups((currentPage.value += 1))
 }
 
 const goToPreviousPage = async () => {
   if (currentPage.value > 0) {
-    currentPage.value -= 1
-    await fetchGroups(currentPage.value - 1)
+    await fetchGroups((currentPage.value -= 1))
   }
 }
 
@@ -104,12 +115,14 @@ function isBookmarked(groupCode) {
   return groupStore.favoriteGroups.some((group) => group.code === groupCode)
 }
 
+// 그룹 이동
 const navigatorToGroup = (group) => {
   router.push({
     path: `/group/${group.code}`
   })
 }
 
+// 개인스케줄 이동
 function navigatorToPersonal() {
   router.push({
     path: '/personal'
@@ -119,12 +132,9 @@ function navigatorToPersonal() {
 const fetchGroups = async (page = 0) => {
   try {
     await groupStore.getGroups(page)
-    loading.value = false
     currentPage.value = page
   } catch (error) {
     console.log('그룹 데이터 실패', error)
-  } finally {
-    loading.value = false
   }
 }
 
@@ -139,24 +149,33 @@ async function fetchAlarmMessage() {
 }
 
 onMounted(async () => {
-  //SSE
-  if (!connect.value) {
-    initializeConnection()
+  try {
+    //SSE
+    if (!connect.value) {
+      initializeConnection()
+    }
+    // 유저 그룹 가져오기
+    fetchGroups(currentPage.value)
+    // 오늘 스케줄
+    todaySchedule.value = await showTodaySchedule()
+    // 즐겨찾기 그룹
+    await groupStore.getFavoriteGroups()
+    // 초대 목록
+    fetchAlarmMessage()
+  } catch (error) {
+    // 오류 발생 시 처리
+    console.error('데이터 로딩 중 오류 발생:', error)
+  } finally {
+    //데이터 로딩 해제
+    isLoading.value = false
   }
-  // 유저 그룹 가져오기
-  fetchGroups(currentPage.value)
-  // 오늘 스케줄
-  todaySchedule.value = await showTodaySchedule()
-  // 즐겨찾기 그룹
-  await groupStore.getFavoriteGroups()
-  // 초대
-  fetchAlarmMessage()
 })
 
 const data = ref([])
 const invite = ref([])
 const connect = ref(null)
 
+// SSE 커넥션 생성
 function initializeConnection() {
   if (connect.value) {
     connect.value.close()
@@ -166,8 +185,6 @@ function initializeConnection() {
 
   connect.value.onopen = () => {
     provide('sse', connect)
-
-    console.log('Connection to server opened.')
   }
 
   connect.value.onmessage = (e) => {
@@ -252,6 +269,16 @@ function removeAlert(item) {
         overflow-y: auto;
         scrollbar-color: #8487e2 #f6f6f8;
       }
+    }
+  }
+  .team-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .arrow {
+      display: flex;
+      gap: 10px;
+      margin-right: 20px;
     }
   }
 }
