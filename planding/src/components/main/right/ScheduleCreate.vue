@@ -1,5 +1,6 @@
 <template>
-  <div class="container">
+  <!-- type 스케줄일시 true 아닐시 false -->
+  <div v-if="!type" class="container">
     <form class="box" @submit.prevent="create(postInfo)">
       <input v-model.trim="title" type="text" placeholder="제목을 입력해주세요." />
       <textarea
@@ -10,11 +11,7 @@
       />
 
       <div class="time-picker">
-        <TimePicker
-          @update:time="startTime = $event"
-          :label="'부터'"
-          style="margin-right: 5px"
-        />
+        <TimePicker @update:time="startTime = $event" :label="'부터'" style="margin-right: 5px" />
         <TimePicker @update:time="endTime = $event" :label="'까지'" style="margin-left: 5px" />
       </div>
       <DateInput @updated:date="scheduleDate = $event" />
@@ -31,7 +28,8 @@ import { ref, computed } from 'vue'
 import DateInput from '../../ui/date/DateInput.vue'
 import TimePicker from '../../ui/date/TimePicker.vue'
 defineProps({
-  create: Function
+  create: Function,
+  type: Boolean
 })
 const title = ref(null)
 const content = ref(null)

@@ -1,5 +1,5 @@
 <template>
-  <LeftRightContainer :create="create">
+  <LeftRightContainer :create="create" :type="isPlannerLoaded">
     <ScheduleManager>
       <img src="/planding_icon.png" />
       <div class="group-page__header">
@@ -110,14 +110,6 @@ onUnmounted(() => {
   if (client.value) {
     client.value.disconnect()
   }
-})
-
-onBeforeRouteUpdate((to, from, next) => {
-  if (to.params.groupCode !== from.params.groupCode) {
-    groupCode.value = to.params.groupCode
-    fetchGroupInfo()
-  }
-  next()
 })
 </script>
 

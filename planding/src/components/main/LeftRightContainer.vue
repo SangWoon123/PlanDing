@@ -2,7 +2,7 @@
   <section id="container">
     <RightComponent :invitations="alarmStore.invites" :schedules="alarmStore.scheduleAlarm">
       <template #footer>
-        <ScheduleCreate :create="create" />
+        <ScheduleCreate :create="create" :type="type" />
       </template>
     </RightComponent>
 
@@ -18,7 +18,8 @@ import LeftComponent from './left/LeftComponent.vue'
 import { useAlarmStore } from '@/store/alarm'
 import { userGroupsStore } from '@/store/group'
 defineProps({
-  create: Function
+  create: Function,
+  type: Boolean
 })
 const groupStore = userGroupsStore()
 const alarmStore = useAlarmStore()

@@ -5,7 +5,6 @@
       <v-btn color="#7F83EA" icon="mdi-chevron-left" @click="prev" class="arrow" />
       <v-btn color="#7F83EA" icon="mdi-chevron-right" @click="next" class="arrow" />
     </div>
-
     <!-- 보기 모드 토글 버튼 -->
     <div class="custom-tabs">
       <v-tabs v-model="viewMode" height="40px" @update:modelValue="updateViewMode" hide-slider>
