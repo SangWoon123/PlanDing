@@ -29,12 +29,12 @@ import { updateGroupAlarmSetting } from '@/service/alarmController'
 
 const props = defineProps({
   bookmark: Boolean,
+  alarm: Boolean,
   groupCode: String
 })
 
 const groupStore = userGroupsStore()
 const bookmark = ref(props.bookmark)
-const alarm = ref(true)
 
 async function handleFavorite(groupCode) {
   await groupStore.toggleFavorite(groupCode)
@@ -43,9 +43,9 @@ async function handleFavorite(groupCode) {
 function handleAlarm(groupCode) {
   try {
     if (alarm.value) {
-      const response = updateGroupAlarmSetting(groupCode, false)
+      updateGroupAlarmSetting(groupCode, false)
     } else {
-      const response = updateGroupAlarmSetting(groupCode, true)
+      updateGroupAlarmSetting(groupCode, true)
     }
   } catch (error) {
     console.error(error)

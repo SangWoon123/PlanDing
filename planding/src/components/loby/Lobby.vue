@@ -46,7 +46,11 @@
         <div class="team-plan-content" style="height: 100%; border-radius: 0 0 4px 4px">
           <GroupRoom class="group-room" @click="createGroup" title="그룹 생성" />
           <div v-for="group in groupStore.groups" :key="group.id">
-            <MouseOver :groupCode="group.code" :bookmark="isBookmarked(group.code)">
+            <MouseOver
+              :groupCode="group.code"
+              :bookmark="isBookmarked(group.code)"
+              :alarm="group.alarm"
+            >
               <GroupRoom
                 @click="navigatorToGroup(group)"
                 :img="group.thumbnailPath"
