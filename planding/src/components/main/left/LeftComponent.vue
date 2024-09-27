@@ -4,8 +4,8 @@
       <div v-for="favorite in favoriteGroup" :key="favorite.groupCode" class="mt-4">
         <img
           @click="navigaitorPage(favorite)"
-          :src="favorite.thumbnailPath ? favorite.thumbnailPath : '/planding.png'"
-          alt=""
+          :src="favorite.thumbnailPath ?  favorite.thumbnailPath : '/src/assets/base_avatar.png'"
+          @error="replaceByDefault"
         />
       </div>
     </div>
@@ -36,6 +36,10 @@ function navigaitorPage(favorite) {
   router.push({
     path: `/group/${favorite.code}`
   })
+}
+
+function replaceByDefault(e){
+  e.target.src = '/src/assets/base_avatar.png';
 }
 
 watch(

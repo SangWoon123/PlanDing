@@ -1,14 +1,19 @@
 <template>
-    <div class="group-box">
-      <figure>
-        <img :src="img" :class="{ 'img-false': !img }" alt="" />
-      </figure>
-      <div class="group-title">
-        <span>{{ title }}</span>
+  <div class="group-box">
+    <figure>
+      <img
+        :src="img"
+        :class="{ 'img-false': !img }"
+        onerror="this.src=`https://loremflickr.com/199/120`"
+        alt=""
+      />
+    </figure>
+    <div class="group-title">
+      <span>{{ title }}</span>
 
-        <span style="color: #bebebe; font-size: 13px">{{ createdAt }}</span>
-      </div>
+      <span style="color: #bebebe; font-size: 13px">{{ createdAt }}</span>
     </div>
+  </div>
 </template>
 
 <script setup>
