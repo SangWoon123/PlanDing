@@ -12,10 +12,9 @@ export const userGroupsStore = defineStore('group', {
   }),
   actions: {
     // 그룹 목록 가져오기
-    async getGroups(page,size=11) {
+    async getGroups(page, size = 11) {
       const response = await authInstance(`/api/v1/group/paging?page=${page}&size=${size}`).get()
       this.groups = response.data.data
-      console.log(this.groups)
     },
     // 특정 그룹정보 가져오기
     async getGroupInfo(code) {

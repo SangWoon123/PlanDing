@@ -30,7 +30,7 @@
                   </span>
                   <DeleteButton
                     class="pa-1 ma-2"
-                    style="background-color: #C565E6"
+                    style="background-color: #c565e6"
                     @click="alarmStore.deleteSchedule(data.id)"
                     flat
                     v-if="isHovering"
@@ -56,7 +56,7 @@
 <script setup>
 import DeleteButton from '../ui/DeleteButton.vue'
 import { useAlarmStore } from '@/store/alarm'
-import { timeAgo } from '@/service/tools/date'
+import { timeAgo } from '@/service/utils/date'
 import { userGroupsStore } from '@/store/group'
 
 const alarmStore = useAlarmStore()
