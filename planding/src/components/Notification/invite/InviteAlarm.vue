@@ -13,14 +13,13 @@
             closable
             @click:close="handleClose(item)"
           >
-
-          <template v-slot:prepend>
+            <template v-slot:prepend>
               <img src="/planding_icon.png" alt="Icon" class="alert-icon" />
             </template>
 
             <v-row class="alert-content">
               <v-col col="3" class="logo-col">
-                <v-img src="/planding_icon.png" alt="Logo"  contain />
+                <v-img src="/planding_icon.png" alt="Logo" contain />
               </v-col>
               <v-col cols="9">
                 <div class="alert-title">
@@ -30,12 +29,12 @@
                   <span style="color: #7d7d7d">now</span>
                 </div>
                 <span class="alert-text">{{ item.message }}</span>
-                <div class="alert-subtext">※ 초대는 [마감일 또는 유효기간]까지 유효합니다.</div>
+                <div class="alert-subtext">※ 초대는 00시 까지 유효합니다.</div>
               </v-col>
             </v-row>
             <div class="alert-btn">
               <v-btn width="50%">거절하기</v-btn>
-              <v-btn width="50%" color="#5f64d9">수락하기</v-btn>
+              <v-btn width="50%" color="#5f64d9" @click="acceptInvite">수락하기</v-btn>
             </div>
           </v-alert>
         </div>
@@ -45,6 +44,7 @@
 </template>
 
 <script setup>
+
 const emit = defineEmits(['remove'])
 defineProps({
   data: Array
